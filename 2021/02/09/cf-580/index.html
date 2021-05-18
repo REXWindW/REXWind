@@ -29,7 +29,9 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
 
 
 
@@ -495,22 +497,22 @@
 <p>那么floyd是怎么求最小环的呢？</p>
 <pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">rep(i,1,n)
     rep(j,1,n)
-        mp[i][j]&#x3D;e[i][j];&#x2F;&#x2F;把一开始的e复制一遍给mp
-rep(k,1,n)&#123;
-    &#x2F;&#x2F;当循环到k的时候,可以保证之前的e[i][j]路径中都不会包含k
-    rep(i,1,k-1)&#123;
-        rep(j,i+1,k-1)&#123;
-            minn &#x3D; min(minn,e[i][j]+mp[i][k]+mp[j][k]);&#x2F;&#x2F;i-&gt;j-&gt;k-&gt;i这个环长度
-            &#x2F;&#x2F;这句后面两个一定要是mp！一开始错在这里
-            &#x2F;&#x2F;想明白了是因为圈上会有边被经过两次,类似丫字型,原本不能成环,但如果不是mp会被误判成环
-        &#125;
-    &#125;
-    rep(i,1,n)&#123;
-        rep(j,1,n)&#123;
-            e[i][j]&#x3D;min(e[i][j],e[i][k]+e[k][j]);&#x2F;&#x2F;这样处理之后,路径可以包含k
-        &#125;
-    &#125;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+        mp[i][j]=e[i][j];//把一开始的e复制一遍给mp
+rep(k,1,n){
+    //当循环到k的时候,可以保证之前的e[i][j]路径中都不会包含k
+    rep(i,1,k-1){
+        rep(j,i+1,k-1){
+            minn = min(minn,e[i][j]+mp[i][k]+mp[j][k]);//i-&gt;j-&gt;k-&gt;i这个环长度
+            //这句后面两个一定要是mp！一开始错在这里
+            //想明白了是因为圈上会有边被经过两次,类似丫字型,原本不能成环,但如果不是mp会被误判成环
+        }
+    }
+    rep(i,1,n){
+        rep(j,1,n){
+            e[i][j]=min(e[i][j],e[i][k]+e[k][j]);//这样处理之后,路径可以包含k
+        }
+    }
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>可以比较直观地看到，第一层枚举k，内层的i和j都不会大于k，这样就保证了新加入的点k不在任何的eij路径中。那么这样一来，i-&gt;j是i到j的一条路径,i-&gt;k-&gt;j是第二条路径，这样一来就是一个环。在这些解里面找最小值即可。</p>
 <p>！之前比较疑惑的点就是，为什么要保留最初的邻接矩阵e在mp中呢？</p>
@@ -524,70 +526,70 @@ rep(k,1,n)&#123;
 #include&lt;vector&gt;
 using namespace std;
 
-int cansel_sync&#x3D;(ios::sync_with_stdio(0),cin.tie(0),0);
+int cansel_sync=(ios::sync_with_stdio(0),cin.tie(0),0);
 #define ll long long
-#define rep(i,a,b) for(int i&#x3D;(a);i&lt;&#x3D;(b);i++)
-#define repb(i,a,b) for(int i&#x3D;(a);i&gt;&#x3D;(b);i--)
+#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
+#define repb(i,a,b) for(int i=(a);i&gt;=(b);i--)
 #define INF 0x3f3f3f3f
 
-const int MAXN &#x3D; 114514;
+const int MAXN = 114514;
 ll a[MAXN];
 int e[666][666],mp[666][666];
 int n;
 vector&lt;ll&gt; vec;
-void solve()&#123;
+void solve(){
     cin&gt;&gt;n;
     rep(i,1,n) cin&gt;&gt;a[i];
     ll tmp;
-    rep(i,0,63)&#123;
-        tmp &#x3D; 1ll&lt;&lt;i;
-        int cnt &#x3D; 0;
+    rep(i,0,63){
+        tmp = 1ll&lt;&lt;i;
+        int cnt = 0;
         rep(i,1,n)
             if(a[i]&amp;tmp) cnt++;
-        if(cnt&gt;&#x3D;3)&#123;
+        if(cnt&gt;=3){
             cout&lt;&lt;3&lt;&lt;endl;
             return;
-        &#125;
-    &#125;
-    vec.push_back(-1);&#x2F;&#x2F;填个空
+        }
+    }
+    vec.push_back(-1);//填个空
     rep(i,1,n)
-        if(a[i]!&#x3D;0) vec.push_back(a[i]);&#x2F;&#x2F;防止0的情况
-    n &#x3D; vec.size()-1;
-    &#x2F;&#x2F;最多2*64个数，floyd找最小环
-    int minn &#x3D; INF;
-    rep(i,1,n)&#123;
-        rep(j,1,n)&#123;
-            e[i][j] &#x3D; INF&#x2F;3;&#x2F;&#x2F;INF的话会越界
-            if(i&#x3D;&#x3D;j) e[i][j]&#x3D;0;
-            else if(vec[i]&amp;vec[j]) e[i][j]&#x3D;1;
-        &#125;
-    &#125;
-    &#x2F;&#x2F;floyd
+        if(a[i]!=0) vec.push_back(a[i]);//防止0的情况
+    n = vec.size()-1;
+    //最多2*64个数，floyd找最小环
+    int minn = INF;
+    rep(i,1,n){
+        rep(j,1,n){
+            e[i][j] = INF/3;//INF的话会越界
+            if(i==j) e[i][j]=0;
+            else if(vec[i]&amp;vec[j]) e[i][j]=1;
+        }
+    }
+    //floyd
     rep(i,1,n)
         rep(j,1,n)
-            mp[i][j]&#x3D;e[i][j];&#x2F;&#x2F;把一开始的e复制一遍给mp
-    rep(k,1,n)&#123;
-        &#x2F;&#x2F;当循环到k的时候,可以保证之前的e[i][j]路径中都不会包含k
-        rep(i,1,k-1)&#123;
-            rep(j,i+1,k-1)&#123;
-                minn &#x3D; min(minn,e[i][j]+mp[i][k]+mp[j][k]);&#x2F;&#x2F;i-&gt;j-&gt;k-&gt;i这个环长度
-                &#x2F;&#x2F;这句后面两个一定要是mp！一开始错在这里
-                &#x2F;&#x2F;想明白了是因为圈上会有边被经过两次,类似丫字型,原本不能成环,但如果不是mp会被误判成环
-            &#125;
-        &#125;
-        rep(i,1,n)&#123;
-            rep(j,1,n)&#123;
-                e[i][j]&#x3D;min(e[i][j],e[i][k]+e[k][j]);&#x2F;&#x2F;这样处理之后,路径可以包含k
-            &#125;
-        &#125;
-    &#125;
+            mp[i][j]=e[i][j];//把一开始的e复制一遍给mp
+    rep(k,1,n){
+        //当循环到k的时候,可以保证之前的e[i][j]路径中都不会包含k
+        rep(i,1,k-1){
+            rep(j,i+1,k-1){
+                minn = min(minn,e[i][j]+mp[i][k]+mp[j][k]);//i-&gt;j-&gt;k-&gt;i这个环长度
+                //这句后面两个一定要是mp！一开始错在这里
+                //想明白了是因为圈上会有边被经过两次,类似丫字型,原本不能成环,但如果不是mp会被误判成环
+            }
+        }
+        rep(i,1,n){
+            rep(j,1,n){
+                e[i][j]=min(e[i][j],e[i][k]+e[k][j]);//这样处理之后,路径可以包含k
+            }
+        }
+    }
     if(minn&gt;n) cout&lt;&lt;-1&lt;&lt;endl;
     else cout&lt;&lt;minn&lt;&lt;endl;
-&#125;
+}
 
-int main()&#123;
+int main(){
     solve();
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
                 

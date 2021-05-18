@@ -29,7 +29,9 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
 
 
 
@@ -510,17 +512,17 @@
 <li>如果$min(d2)&gt;max(d3)$，说明$d2$太长或者$d3$太短，所以应该向左移动$mid$?</li>
 </ul>
 <p>不对，因为在向左移动$mid$的时候，$max(d3)$增大的同时$min(d2)$也在增大，并不是在向更接近的地方行进，所以不行！</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">while(l&lt;r)&#123;
-	mid &#x3D; (l+r)&gt;&gt;1;
-	tmp &#x3D; qry(i,mid);
-	&#x2F;&#x2F;这里我一开始多写了个条件就是max2和tmp比较的,这个不能有
-	&#x2F;&#x2F;因为扩的时候max2和tmp都可能下降，并不是往更接近的方向走
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">while(l&lt;r){
+	mid = (l+r)&gt;&gt;1;
+	tmp = qry(i,mid);
+	//这里我一开始多写了个条件就是max2和tmp比较的,这个不能有
+	//因为扩的时候max2和tmp都可能下降，并不是往更接近的方向走
     if(tmp&gt;max1[i-1]||max1[i-1]&lt;max2[mid+1])
-		l &#x3D; mid+1;
+		l = mid+1;
 	else if(tmp&lt;max1[i-1]||max1[i-1]&gt;max2[mid+1])
-		r &#x3D; mid-1;
+		r = mid-1;
 	else break;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include&lt;iostream&gt;
 #include&lt;algorithm&gt;
@@ -530,82 +532,82 @@
 #include&lt;queue&gt;
 #include&lt;cmath&gt;
 using namespace std;
-#define rep(i,a,b) for(int i&#x3D;(a);i&lt;&#x3D;(b);i++)
-#define repb(i,a,b) for(int i&#x3D;(a);i&gt;&#x3D;(b);i--)
+#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
+#define repb(i,a,b) for(int i=(a);i&gt;=(b);i--)
 #define ll long long
-#define log(x) (31-__builtin_clz(x))&#x2F;&#x2F;谢谢hjt
-const int MAXN &#x3D; 2e5+5;
-int cansel_sync&#x3D;(ios::sync_with_stdio(0),cin.tie(0),0);
-const int LOGN &#x3D; log(MAXN)&#x2F;log(2); 
+#define log(x) (31-__builtin_clz(x))//谢谢hjt
+const int MAXN = 2e5+5;
+int cansel_sync=(ios::sync_with_stdio(0),cin.tie(0),0);
+const int LOGN = log(MAXN)/log(2); 
 int M[MAXN][LOGN+3]; 
 int a[MAXN];
 int z,m,n;
 int max1[MAXN];
 int max2[MAXN];
 
-void init()&#123;&#x2F;&#x2F;初始化，复杂度O(nlogn) 
-	for(int i&#x3D;1;i&lt;&#x3D;n;i++) M[i][0]&#x3D;i;&#x2F;&#x2F;长度为1的区间最值是自己 
-	for(int j&#x3D;1;j&lt;&#x3D;LOGN;j++)&#123;
-		for(int i&#x3D;1;i&lt;&#x3D;n-(1&lt;&lt;j)+1;i++)&#123;
-			if(a[M[i][j-1]]&lt;a[M[i+(1&lt;&lt;(j-1))][j-1]]) M[i][j] &#x3D; M[i][j-1];&#x2F;&#x2F;这里以最小值为例 
-			else M[i][j] &#x3D; M[i+(1&lt;&lt;j-1)][j-1];
-		&#125;
-	&#125; 
-&#125;
-inline int query(int l,int r)&#123;
-	int k &#x3D; log(r-l+1)&#x2F;log(2);&#x2F;&#x2F;向下取整
+void init(){//初始化，复杂度O(nlogn) 
+	for(int i=1;i&lt;=n;i++) M[i][0]=i;//长度为1的区间最值是自己 
+	for(int j=1;j&lt;=LOGN;j++){
+		for(int i=1;i&lt;=n-(1&lt;&lt;j)+1;i++){
+			if(a[M[i][j-1]]&lt;a[M[i+(1&lt;&lt;(j-1))][j-1]]) M[i][j] = M[i][j-1];//这里以最小值为例 
+			else M[i][j] = M[i+(1&lt;&lt;j-1)][j-1];
+		}
+	} 
+}
+inline int query(int l,int r){
+	int k = log(r-l+1)/log(2);//向下取整
 	if(a[M[l][k]]&lt;a[M[r-(1&lt;&lt;k)+1][k]]) return M[l][k];
 	else return M[r-(1&lt;&lt;k)+1][k];
-&#125;
-inline int qry(int l,int r)&#123;
-    return a[query(l,r)];&#x2F;&#x2F;直接返回数值
-&#125;
+}
+inline int qry(int l,int r){
+    return a[query(l,r)];//直接返回数值
+}
 bool flag;
-void solve()&#123;
+void solve(){
     int la,lb,lc;
-    flag &#x3D; 0;
+    flag = 0;
     cin&gt;&gt;n;
     rep(i,1,n) cin&gt;&gt;a[i];
     init();
-    max1[0]&#x3D;max2[n+1] &#x3D; 0;
-    rep(i,1,n) max1[i] &#x3D; max(max1[i-1],a[i]);&#x2F;&#x2F;前缀最大值
-    repb(i,n,1) max2[i] &#x3D; max(max2[i+1],a[i]);
+    max1[0]=max2[n+1] = 0;
+    rep(i,1,n) max1[i] = max(max1[i-1],a[i]);//前缀最大值
+    repb(i,n,1) max2[i] = max(max2[i+1],a[i]);
     int l,r,mid,tmp;
-    rep(i,2,n-1)&#123;&#x2F;&#x2F;枚举中间段的开头
-        l &#x3D; i,r &#x3D; n-1;&#x2F;&#x2F;二分
-        while(l&lt;r)&#123;
-            mid &#x3D; (l+r)&gt;&gt;1;
-            tmp &#x3D; qry(i,mid);
-            &#x2F;&#x2F;这里我一开始多写了个条件就是max2和tmp比较的,这个不能有
-            &#x2F;&#x2F;因为扩的时候max2和tmp都可能下降，并不是往更接近的方向走
+    rep(i,2,n-1){//枚举中间段的开头
+        l = i,r = n-1;//二分
+        while(l&lt;r){
+            mid = (l+r)&gt;&gt;1;
+            tmp = qry(i,mid);
+            //这里我一开始多写了个条件就是max2和tmp比较的,这个不能有
+            //因为扩的时候max2和tmp都可能下降，并不是往更接近的方向走
             if(tmp&gt;max1[i-1]||max1[i-1]&lt;max2[mid+1])
-                l &#x3D; mid+1;
+                l = mid+1;
             else if(tmp&lt;max1[i-1]||max1[i-1]&gt;max2[mid+1])
-                r &#x3D; mid-1;
+                r = mid-1;
             else break;
-        &#125;
-        mid &#x3D; (l+r)&gt;&gt;1;
-        if(mid&gt;&#x3D;i&amp;&amp;mid&lt;&#x3D;n-1)&#123;
-            tmp &#x3D; qry(i,mid);
-            if(tmp&#x3D;&#x3D;max1[i-1]&amp;&amp;tmp&#x3D;&#x3D;max2[mid+1])&#123;
-                flag &#x3D; 1;
-                la &#x3D; i-1,lb &#x3D; mid-i+1,lc &#x3D; n-mid;
+        }
+        mid = (l+r)&gt;&gt;1;
+        if(mid&gt;=i&amp;&amp;mid&lt;=n-1){
+            tmp = qry(i,mid);
+            if(tmp==max1[i-1]&amp;&amp;tmp==max2[mid+1]){
+                flag = 1;
+                la = i-1,lb = mid-i+1,lc = n-mid;
                 break;
-            &#125;
-        &#125;
-    &#125;
-    if(!flag) cout&lt;&lt;&quot;NO&quot;&lt;&lt;endl;
-    else&#123;
-        cout&lt;&lt;&quot;YES&quot;&lt;&lt;endl;
-        cout&lt;&lt;la&lt;&lt;&#39; &#39;&lt;&lt;lb&lt;&lt;&#39; &#39;&lt;&lt;lc&lt;&lt;endl;
-    &#125;
-&#125;
-signed main()&#123;
+            }
+        }
+    }
+    if(!flag) cout&lt;&lt;"NO"&lt;&lt;endl;
+    else{
+        cout&lt;&lt;"YES"&lt;&lt;endl;
+        cout&lt;&lt;la&lt;&lt;' '&lt;&lt;lb&lt;&lt;' '&lt;&lt;lc&lt;&lt;endl;
+    }
+}
+signed main(){
     int z;
     cin&gt;&gt;z;
     while(z--) solve();
-&#125;
-&#x2F;&#x2F;二分yyds<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+}
+//二分yyds<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
                 
@@ -957,12 +959,12 @@ signed main()&#123;
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%9B%BE%E8%AE%BA/">
-                        <span class="chip bg-color">图论</span>
-                    </a>
-                    
                     <a href="/tags/ACM%E6%A8%A1%E6%9D%BF/">
                         <span class="chip bg-color">ACM模板</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%9B%BE%E8%AE%BA/">
+                        <span class="chip bg-color">图论</span>
                     </a>
                     
                 </div>

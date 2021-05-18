@@ -29,7 +29,9 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
 
 
 
@@ -431,12 +433,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E5%9B%BE%E8%AE%BA/">
-                                <span class="chip bg-color">图论</span>
-                            </a>
-                        
                             <a href="/tags/ACM%E6%A8%A1%E6%9D%BF/">
                                 <span class="chip bg-color">ACM模板</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%9B%BE%E8%AE%BA/">
+                                <span class="chip bg-color">图论</span>
                             </a>
                         
                     </div>
@@ -498,86 +500,86 @@
 #include&lt;cmath&gt;
 using namespace std;
 
-template&lt;class T&gt;inline void read(T &amp;x)&#123;x&#x3D;0;char o,f&#x3D;1;while(o&#x3D;getchar(),o&lt;48)if(o&#x3D;&#x3D;45)f&#x3D;-f;do x&#x3D;(x&lt;&lt;3)+(x&lt;&lt;1)+(o^48);while(o&#x3D;getchar(),o&gt;47);x*&#x3D;f;&#125;
-int cansel_sync&#x3D;(ios::sync_with_stdio(0),cin.tie(0),0);
+template&lt;class T&gt;inline void read(T &amp;x){x=0;char o,f=1;while(o=getchar(),o&lt;48)if(o==45)f=-f;do x=(x&lt;&lt;3)+(x&lt;&lt;1)+(o^48);while(o=getchar(),o&gt;47);x*=f;}
+int cansel_sync=(ios::sync_with_stdio(0),cin.tie(0),0);
 #define ll long long
-#define rep(i,a,b) for(int i&#x3D;(a);i&lt;&#x3D;(b);i++)
-#define repb(i,a,b) for(int i&#x3D;(a);i&gt;&#x3D;b;i--)
+#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
+#define repb(i,a,b) for(int i=(a);i&gt;=b;i--)
 #define INF 0x3f3f3f3f
-#define cendl printf(&quot;\n&quot;)
-ll gcd(ll a,ll b)&#123; while(b^&#x3D;a^&#x3D;b^&#x3D;a%&#x3D;b); return a; &#125;
-&#x2F;&#x2F;#define INF 0x7fffffff
+#define cendl printf("\n")
+ll gcd(ll a,ll b){ while(b^=a^=b^=a%=b); return a; }
+//#define INF 0x7fffffff
 
-const int MAXN &#x3D; 2e6+5;
+const int MAXN = 2e6+5;
 
 int n;
-vector&lt;int&gt; e[MAXN];&#x2F;&#x2F;存图 
+vector&lt;int&gt; e[MAXN];//存图 
 int dfn[MAXN],low[MAXN];
-int dfncnt;&#x2F;&#x2F;dfn自增下标 
-int s[MAXN],tp;&#x2F;&#x2F;数组模拟栈,tp记录大小 
-bool in[MAXN];&#x2F;&#x2F;记录该点是否在栈中 
-int scc[MAXN],sc;&#x2F;&#x2F;节点i所在scc的编号,sc记录有几个强连通 
-int sz[MAXN];&#x2F;&#x2F;强连通i的大小 
-int indg[MAXN];&#x2F;&#x2F;记录缩点后的入度（这题才有的 
+int dfncnt;//dfn自增下标 
+int s[MAXN],tp;//数组模拟栈,tp记录大小 
+bool in[MAXN];//记录该点是否在栈中 
+int scc[MAXN],sc;//节点i所在scc的编号,sc记录有几个强连通 
+int sz[MAXN];//强连通i的大小 
+int indg[MAXN];//记录缩点后的入度（这题才有的 
 
-void tarjan(int u)&#123;
-	low[u]&#x3D;dfn[u]&#x3D;++dfncnt;&#x2F;&#x2F;low初始值为自身dfn
-	s[++tp]&#x3D;u;&#x2F;&#x2F;推u入栈，从1开始 
-	in[u]&#x3D;1;&#x2F;&#x2F;记录u点在栈中 
-	for(auto v:e[u])&#123;&#x2F;&#x2F;访问到新点的情况 
-		if(!dfn[v])&#123;
+void tarjan(int u){
+	low[u]=dfn[u]=++dfncnt;//low初始值为自身dfn
+	s[++tp]=u;//推u入栈，从1开始 
+	in[u]=1;//记录u点在栈中 
+	for(auto v:e[u]){//访问到新点的情况 
+		if(!dfn[v]){
 			tarjan(v);
-			low[u] &#x3D; min(low[u],low[v]);&#x2F;&#x2F;用low[v&#125;更新low[u] 
-		&#125;
-		else if(in[v])&#x2F;&#x2F;v被访问过，但是在栈中 
-			low[u] &#x3D; min(low[u],dfn[v]);
-	&#125;
-	if(dfn[u]&#x3D;&#x3D;low[u])&#123;&#x2F;&#x2F;u是连通分量的根节点
-		sc++;&#x2F;&#x2F;强连通数量++
-		sz[sc] &#x3D; 0; 
-		while(s[tp]!&#x3D;u)&#123;&#x2F;&#x2F;u和u之后的点全部出栈 
-			scc[s[tp]] &#x3D; sc;&#x2F;&#x2F;这个点包含于第几个强连通
-			sz[sc]++;&#x2F;&#x2F;u为根的这个强连通的大小 
-			in[s[tp]] &#x3D; 0;&#x2F;&#x2F;出栈 
+			low[u] = min(low[u],low[v]);//用low[v}更新low[u] 
+		}
+		else if(in[v])//v被访问过，但是在栈中 
+			low[u] = min(low[u],dfn[v]);
+	}
+	if(dfn[u]==low[u]){//u是连通分量的根节点
+		sc++;//强连通数量++
+		sz[sc] = 0; 
+		while(s[tp]!=u){//u和u之后的点全部出栈 
+			scc[s[tp]] = sc;//这个点包含于第几个强连通
+			sz[sc]++;//u为根的这个强连通的大小 
+			in[s[tp]] = 0;//出栈 
 			tp--; 
-		&#125;
-		scc[u] &#x3D; sc;&#x2F;&#x2F;给根节点标，属于第sc个强连通 
+		}
+		scc[u] = sc;//给根节点标，属于第sc个强连通 
 		sz[sc]++;
-		in[u] &#x3D; 0;
+		in[u] = 0;
 		tp--;
-	&#125;
-&#125; 
+	}
+} 
 
-void reset()&#123;
-	tp &#x3D; sc &#x3D; dfncnt &#x3D;0;
-	rep(i,1,n)&#123;
-		in[i] &#x3D; dfn[i] &#x3D; 0;&#x2F;&#x2F;low不用清空，sz在之后用到再清空 
+void reset(){
+	tp = sc = dfncnt =0;
+	rep(i,1,n){
+		in[i] = dfn[i] = 0;//low不用清空，sz在之后用到再清空 
 		e[i].clear();
-	&#125;
-&#125;
+	}
+}
 
-int main()&#123;
+int main(){
 	cin&gt;&gt;n;
 	reset();
 	int v;
-	rep(u,1,n)&#123;
-		while(cin&gt;&gt;v&amp;&amp;v!&#x3D;0) e[u].push_back(v);
-	&#125; 
+	rep(u,1,n){
+		while(cin&gt;&gt;v&amp;&amp;v!=0) e[u].push_back(v);
+	} 
 	rep(u,1,n)
 		if(!dfn[u]) tarjan(u);
-	rep(i,1,sc) indg[i] &#x3D; 0;&#x2F;&#x2F;这个不包含在tarjan里面，是这题记录入度的 
-	rep(u,1,n)&#123;
-		for(auto v:e[u])&#123;
-			if(scc[u]!&#x3D;scc[v]) indg[scc[v]]++;
-		&#125;
-	&#125;
-	int res &#x3D; 0;
-	rep(i,1,sc)&#123;
-		if(indg[i]&#x3D;&#x3D;0) res++;
-	&#125;
+	rep(i,1,sc) indg[i] = 0;//这个不包含在tarjan里面，是这题记录入度的 
+	rep(u,1,n){
+		for(auto v:e[u]){
+			if(scc[u]!=scc[v]) indg[scc[v]]++;
+		}
+	}
+	int res = 0;
+	rep(i,1,sc){
+		if(indg[i]==0) res++;
+	}
 	cout&lt;&lt;res&lt;&lt;endl;
-&#125;
-&#x2F;&#x2F;洛谷P2835 刻录光盘 https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;problem&#x2F;P2835#submit<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+}
+//洛谷P2835 刻录光盘 https://www.luogu.com.cn/problem/P2835#submit<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h3 id="Tarjan求割点"><a href="#Tarjan求割点" class="headerlink" title="Tarjan求割点"></a>Tarjan求割点</h3><p>定义：去掉这个点，连通分量数量+1</p>
 <p>无向图的$low[u]$在这里表述成：点$u$在<strong>不经过其父亲的情况下能达到的最小时间戳/过一条非树边达到的最小时间戳</strong>(最小的$dfn$)</p>
@@ -586,62 +588,62 @@ int main()&#123;
 <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include&lt;iostream&gt;
 #include&lt;vector&gt;
 #include&lt;algorithm&gt;
-#define rep(i,a,b) for(int i&#x3D;(a);i&lt;&#x3D;(b);i++)
+#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
 using namespace std;
-const int MAXN &#x3D; 114514;
+const int MAXN = 114514;
 int n,m;
 vector&lt;int&gt;e[MAXN];
 bool vis[MAXN];
-bool flag[MAXN];&#x2F;&#x2F;标记割点
-int res;&#x2F;&#x2F;记录割点数量
-int low[MAXN],dfn[MAXN],dfncnt;&#x2F;&#x2F;老tarjan了
+bool flag[MAXN];//标记割点
+int res;//记录割点数量
+int low[MAXN],dfn[MAXN],dfncnt;//老tarjan了
 
-void Tarjan(int u,int pre)&#123;&#x2F;&#x2F;pre&#x3D;-1时代表是祖先
-    vis[u] &#x3D; 1;
-    low[u] &#x3D; dfn[u] &#x3D; ++dfncnt;
-    int cntchild&#x3D;0;&#x2F;&#x2F;儿子数量
-    for(auto v:e[u])&#123;
-        if(!vis[v])&#123;
+void Tarjan(int u,int pre){//pre=-1时代表是祖先
+    vis[u] = 1;
+    low[u] = dfn[u] = ++dfncnt;
+    int cntchild=0;//儿子数量
+    for(auto v:e[u]){
+        if(!vis[v]){
             cntchild++;
             Tarjan(v,u);
-            low[u] &#x3D; min(low[u],low[v]);
-            if(pre!&#x3D;-1&amp;&amp;low[v]&gt;&#x3D;dfn[u]&amp;&amp;!flag[u])&#123;&#x2F;&#x2F;算法核心
-                flag[u]&#x3D;1;
+            low[u] = min(low[u],low[v]);
+            if(pre!=-1&amp;&amp;low[v]&gt;=dfn[u]&amp;&amp;!flag[u]){//算法核心
+                flag[u]=1;
                 res++;
-            &#125;
-        &#125;
-        else if(v!&#x3D;pre)&#x2F;&#x2F;往上的边,更新当前节点的low
-            low[u] &#x3D; min(low[u],dfn[v]);
-    &#125;
-    if(pre&#x3D;&#x3D;-1&amp;&amp;cntchild&gt;&#x3D;2&amp;&amp;!flag[u])&#123;&#x2F;&#x2F;u为祖先要另外讨论
-        flag[u]&#x3D;1;
+            }
+        }
+        else if(v!=pre)//往上的边,更新当前节点的low
+            low[u] = min(low[u],dfn[v]);
+    }
+    if(pre==-1&amp;&amp;cntchild&gt;=2&amp;&amp;!flag[u]){//u为祖先要另外讨论
+        flag[u]=1;
         res++;
-    &#125;
-&#125;
+    }
+}
 
-void solve()&#123;
+void solve(){
     cin&gt;&gt;n&gt;&gt;m;
-    &#x2F;&#x2F;初始化
-    rep(i,1,n)&#123;vis[i]&#x3D;flag[i]&#x3D;0;e[i].clear();&#125;
-    res&#x3D;dfncnt&#x3D;0;
+    //初始化
+    rep(i,1,n){vis[i]=flag[i]=0;e[i].clear();}
+    res=dfncnt=0;
     int u,v;
-    rep(i,1,m)&#123;
+    rep(i,1,m){
         cin&gt;&gt;u&gt;&gt;v;
         e[u].push_back(v);
         e[v].push_back(u);
-    &#125;
-    rep(i,1,n) if(!vis[i]) Tarjan(i,-1);&#x2F;&#x2F;也可在这重置dfncnt
+    }
+    rep(i,1,n) if(!vis[i]) Tarjan(i,-1);//也可在这重置dfncnt
     cout&lt;&lt;res&lt;&lt;endl;
-    rep(i,1,n)&#123;
-        if(flag[i]) cout&lt;&lt;i&lt;&lt;&#39; &#39;;
-    &#125;
+    rep(i,1,n){
+        if(flag[i]) cout&lt;&lt;i&lt;&lt;' ';
+    }
     cout&lt;&lt;endl;
-&#125;
-int main()&#123;
+}
+int main(){
     solve();
-&#125;
-&#x2F;&#x2F;P3388 【模板】割点（割顶）
-&#x2F;&#x2F;https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;problem&#x2F;P3388<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+}
+//P3388 【模板】割点（割顶）
+//https://www.luogu.com.cn/problem/P3388<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h3 id="Tarjan求桥-割边"><a href="#Tarjan求桥-割边" class="headerlink" title="Tarjan求桥(割边)"></a>Tarjan求桥(割边)</h3><p>类似求割点，和割点差不多，只要改一处：$low[v]&gt;dfn[u]$ 就可以了，因为从”&gt;=”变成了”=”，所以不需要考虑祖先节点的问题。</p>
 <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int low[MAXN], dfn[MAXN], iscut[MAXN], dfs_clock;
@@ -650,26 +652,26 @@ vector&lt;int&gt; G[MAXN];
 int cnt_bridge;
 int father[MAXN];
 
-void tarjan(int u, int fa) &#123;
-    father[u] &#x3D; fa;
-    low[u] &#x3D; dfn[u] &#x3D; ++dfs_clock;
-    for (int i &#x3D; 0; i &lt; G[u].size(); i++) &#123;
-        int v &#x3D; G[u][i];
-        if (!dfn[v]) &#123;
+void tarjan(int u, int fa) {
+    father[u] = fa;
+    low[u] = dfn[u] = ++dfs_clock;
+    for (int i = 0; i &lt; G[u].size(); i++) {
+        int v = G[u][i];
+        if (!dfn[v]) {
             tarjan(v, u);
-            low[u] &#x3D; min(low[u], low[v]);
-            if (low[v] &gt; dfn[u]) &#123;&#x2F;&#x2F;算法核心
-                isbridge[v] &#x3D; true;
+            low[u] = min(low[u], low[v]);
+            if (low[v] &gt; dfn[u]) {//算法核心
+                isbridge[v] = true;
                 ++cnt_bridge;
-            &#125;
-        &#125; 
-        else if (dfn[v] &lt; dfn[u] &amp;&amp; v !&#x3D; fa) &#123;
-            low[u] &#x3D; min(low[u], dfn[v]);
-        &#125;
-    &#125;
-&#125;
-&#x2F;&#x2F;摘自OIWIKI
-&#x2F;&#x2F;https:&#x2F;&#x2F;oi-wiki.org&#x2F;graph&#x2F;cut&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+            }
+        } 
+        else if (dfn[v] &lt; dfn[u] &amp;&amp; v != fa) {
+            low[u] = min(low[u], dfn[v]);
+        }
+    }
+}
+//摘自OIWIKI
+//https://oi-wiki.org/graph/cut/<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
                 
@@ -735,12 +737,12 @@ void tarjan(int u, int fa) &#123;
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E5%9B%BE%E8%AE%BA/">
-                                    <span class="chip bg-color">图论</span>
-                                </a>
-                            
                                 <a href="/tags/ACM%E6%A8%A1%E6%9D%BF/">
                                     <span class="chip bg-color">ACM模板</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%9B%BE%E8%AE%BA/">
+                                    <span class="chip bg-color">图论</span>
                                 </a>
                             
                         </div>

@@ -29,7 +29,9 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
 
 
 
@@ -512,86 +514,86 @@
 #include&lt;cstring&gt;
 #include&lt;algorithm&gt;
 using namespace std;
-#define rep(i,a,b) for(int i&#x3D;(a);i&lt;&#x3D;(b);i++)
-#define repb(i,a,b) for(int i&#x3D;(a);i&gt;&#x3D;(b);i--)
-const int MAXN &#x3D; 114;
+#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
+#define repb(i,a,b) for(int i=(a);i&gt;=(b);i--)
+const int MAXN = 114;
 #define INF 0x3f3f3f3f
-int cansel_sync&#x3D;(ios::sync_with_stdio(0),cin.tie(0),0);
+int cansel_sync=(ios::sync_with_stdio(0),cin.tie(0),0);
 int dp[MAXN][10010];
 int a[MAXN],b[MAXN];
 int n,tot;
-void solve()&#123;
+void solve(){
     cin&gt;&gt;n;
-    tot &#x3D; 0;
-    rep(i,1,n)&#123;
+    tot = 0;
+    rep(i,1,n){
         cin&gt;&gt;a[i]&gt;&gt;b[i];
-        tot+&#x3D;b[i];
-    &#125;
+        tot+=b[i];
+    }
     memset(dp,-INF,sizeof(dp));
-    dp[0][0]&#x3D;0;
-    rep(i,1,n)&#123;
-        repb(j,i,1)&#123;
-            repb(k,tot,0)&#123;&#x2F;&#x2F;错在这里，因为可能有bi&#x3D;0的情况
-                if(k&gt;&#x3D;b[i]&amp;&amp;j) dp[j][k] &#x3D; max(dp[j][k],dp[j-1][k-b[i]]+a[i]);
-            &#125;
-        &#125;
-    &#125;
-    rep(j,1,n)&#123;
-        double res &#x3D; 0;
-        rep(k,0,tot)&#123;&#x2F;&#x2F;第二处错在这里，应该从0开始，因为k是水量不是容量，所以也可能为0
-            res &#x3D; max(res,min((double)dp[j][k],k+(double)(tot-k)&#x2F;2));
-        &#125;
-        cout&lt;&lt;res&lt;&lt;&#39; &#39;;
-    &#125;
+    dp[0][0]=0;
+    rep(i,1,n){
+        repb(j,i,1){
+            repb(k,tot,0){//错在这里，因为可能有bi=0的情况
+                if(k&gt;=b[i]&amp;&amp;j) dp[j][k] = max(dp[j][k],dp[j-1][k-b[i]]+a[i]);
+            }
+        }
+    }
+    rep(j,1,n){
+        double res = 0;
+        rep(k,0,tot){//第二处错在这里，应该从0开始，因为k是水量不是容量，所以也可能为0
+            res = max(res,min((double)dp[j][k],k+(double)(tot-k)/2));
+        }
+        cout&lt;&lt;res&lt;&lt;' ';
+    }
     cout&lt;&lt;endl;
-&#125;
-int main()&#123;
+}
+int main(){
     solve();
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h2 id="解法2"><a href="#解法2" class="headerlink" title="解法2"></a>解法2</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include&lt;iostream&gt;
 #include&lt;cstring&gt;
 #include&lt;algorithm&gt;
 using namespace std;
-#define rep(i,a,b) for(int i&#x3D;(a);i&lt;&#x3D;(b);i++)
-#define repb(i,a,b) for(int i&#x3D;(a);i&gt;&#x3D;(b);i--)
-const int MAXN &#x3D; 114;
+#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
+#define repb(i,a,b) for(int i=(a);i&gt;=(b);i--)
+const int MAXN = 114;
 #define INF 0x3f3f3f3f
-int cansel_sync&#x3D;(ios::sync_with_stdio(0),cin.tie(0),0);
+int cansel_sync=(ios::sync_with_stdio(0),cin.tie(0),0);
 int dp[MAXN][10010];
 int a[MAXN],b[MAXN];
 int n,tota,totb;
-void solve()&#123;
+void solve(){
     cin&gt;&gt;n;
-    tota &#x3D; totb &#x3D; 0;
-    rep(i,1,n)&#123;
+    tota = totb = 0;
+    rep(i,1,n){
         cin&gt;&gt;a[i]&gt;&gt;b[i];
-        tota+&#x3D;a[i];
-        totb+&#x3D;b[i];
-    &#125;
+        tota+=a[i];
+        totb+=b[i];
+    }
     memset(dp,-INF,sizeof(dp));
-    dp[0][0]&#x3D;0;
-    rep(i,1,n)&#123;
-        repb(j,i,1)&#123;
-            repb(k,tota,0)&#123;
-                if(k&gt;&#x3D;a[i]&amp;&amp;j) dp[j][k] &#x3D; max(dp[j][k],dp[j-1][k-a[i]]+b[i]);
-            &#125;
-        &#125;
-    &#125;
-    rep(j,1,n)&#123;
-        double res &#x3D; 0;
-        rep(k,0,tota)&#123;
-            if(dp[j][k]&gt;&#x3D;0)&#123;
-                res &#x3D; max(res,min((double)k,(double)dp[j][k]+(double)(totb-dp[j][k])&#x2F;2));
-            &#125;
-        &#125;
-        cout&lt;&lt;res&lt;&lt;&#39; &#39;;
-    &#125;
+    dp[0][0]=0;
+    rep(i,1,n){
+        repb(j,i,1){
+            repb(k,tota,0){
+                if(k&gt;=a[i]&amp;&amp;j) dp[j][k] = max(dp[j][k],dp[j-1][k-a[i]]+b[i]);
+            }
+        }
+    }
+    rep(j,1,n){
+        double res = 0;
+        rep(k,0,tota){
+            if(dp[j][k]&gt;=0){
+                res = max(res,min((double)k,(double)dp[j][k]+(double)(totb-dp[j][k])/2));
+            }
+        }
+        cout&lt;&lt;res&lt;&lt;' ';
+    }
     cout&lt;&lt;endl;
-&#125;
-int main()&#123;
+}
+int main(){
     solve();
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
                 

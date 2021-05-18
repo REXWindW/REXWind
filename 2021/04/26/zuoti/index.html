@@ -29,7 +29,9 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
 
 
 
@@ -531,12 +533,12 @@
 </ul>
 <p><a target="_blank" rel="noopener" href="https://www.dingbacode.com/contest/289/problem/1002">https://www.dingbacode.com/contest/289/problem/1002</a></p>
 <p>对于第二个问题，只要求ai二进制中的1和aj二进制中的1数量和为偶数即可。但是如果用除二模二的方法会被卡，(1000ms/1500ms)所以有一种更快的求1数量的方法：这样每次必定能去掉二进制中的一个1！</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">while(hc)&#123;
-	cnt+&#x3D;1;
-    hc&amp;&#x3D;(hc-1);
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">while(hc){
+	cnt+=1;
+    hc&amp;=(hc-1);
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h3 id="【map-lt-vector-xxx-gt-代替字典树】【分割序列使每段任两个积不是平方数】"><a href="#【map-lt-vector-xxx-gt-代替字典树】【分割序列使每段任两个积不是平方数】" class="headerlink" title="【map&lt;vector,xxx&gt;代替字典树】【分割序列使每段任两个积不是平方数】"></a>【map&lt;vector,xxx&gt;代替字典树】【分割序列使每段任两个积不是平方数】</h3><ul>
+<h3 id="【map-lt-vector-xxx-gt-代替字典树】【分割序列使每段任两个积不是平方数】"><a href="#【map-lt-vector-xxx-gt-代替字典树】【分割序列使每段任两个积不是平方数】" class="headerlink" title="【map<vector,xxx>代替字典树】【分割序列使每段任两个积不是平方数】"></a>【map&lt;vector,xxx&gt;代替字典树】【分割序列使每段任两个积不是平方数】</h3><ul>
 <li>【数学】 CF708E1 给序列a，不改变顺序分割成几段，要求每段中不能存在ai和aj使得$a_i\cdot a_j=x^2$即不能是</li>
 </ul>
 <p>一个平方数。问最少分割成几段。ai范围1e7。</p>
@@ -559,12 +561,12 @@
 <li>【dp,树】CF652D 给一种树叫RDB，1级的RDB只有一个点，RDB的等级每次往上升级一次时:</li>
 </ul>
 <p>如果点u没有孩子，则给它创造一个孩子；如果点u有一个孩子，则给它增加俩孩子；如果点u有三个孩子，则不动它。</p>
-<img src="\img\zuoti\capture_20210324164919694.bmp" alt="capture_20210324164919694" style="zoom:50%;" />
+<img src="\img\zuoti\capture_20210324164919694.bmp" alt="capture_20210324164919694" style="zoom:50%;">
 
 <p>每组输入给一个n级的RDB，所有点都是绿色，每次可以选择一个“鸡爪”即一个点连着三个儿子且全部为绿色的子图，把整个“鸡爪”染黄，问最多能染黄多少个点。</p>
 <p><a target="_blank" rel="noopener" href="https://codeforces.com/contest/1369/problem/D">https://codeforces.com/contest/1369/problem/D</a></p>
 <p>答：i级的树其实就是两颗i-2级树和一颗i-1级树组成。</p>
-<p><img src="\img\zuoti\capture_20210324171647672.bmp" alt="capture_20210324171647672" style="zoom:33%;" /><img src="\img\zuoti\capture_20210324172049435.bmp" alt="capture_20210324172049435" style="zoom:50%;" /> </p>
+<p><img src="\img\zuoti\capture_20210324171647672.bmp" alt="capture_20210324171647672" style="zoom:33%;"><img src="\img\zuoti\capture_20210324172049435.bmp" alt="capture_20210324172049435" style="zoom:50%;"> </p>
 <p>因此初步可得到递推式$cnt_i=2\cdot cnt_{i-2}+cnt_{i-1}$，另外还要维护一个top数组，表示i级树的根是否被使用，如果$top_{i-1}$和$top_{i-1}$都为0，则i级树的根和这三个点可以再构成一个鸡爪（最后一张图这样），且$top_i=1$。只需要一开始预处理即可。</p>
 <h3 id="【三种木棍选两种构造矩形-使用完木棍总面积最大】"><a href="#【三种木棍选两种构造矩形-使用完木棍总面积最大】" class="headerlink" title="【三种木棍选两种构造矩形,使用完木棍总面积最大】"></a>【三种木棍选两种构造矩形,使用完木棍总面积最大】</h3><ul>
 <li>【DP】EDU93D 给r,g,b三个数字表示三种类木棍的数量(&lt;=200)之后读入每种木棍的所有木棍。每次可以取两种不同颜色的木棍，以之为长宽构造一个矩形，重复直到木棍用尽，问最大的总面积。</li>
@@ -574,12 +576,12 @@
 <p>我们知道这个dp中有很多状态都是达不到的，比如$dp_{1,0,0}$显然是达不到的状态</p>
 <p>并且如果要求$dp_{i,j,k}$,我们不知道他是从$dp{i-1,j-1,k},dp_{i-1,j,k-1},dp_{i,j-1,k-1}$中的哪个拼接上来的。</p>
 <p>因此我们用$dp{i,j,k}$往上去推$dp_{i+1,j+1,k}$等等。所以有转移方程：</p>
-<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">if(i+1&lt;&#x3D;c[1]&amp;&amp;j+1&lt;&#x3D;c[2])
-    dp[i+1][j+1][k]&#x3D;max(dp[i+1][j+1][k],dp[i][j][k]+(ll)a[1][i+1]*a[2][j+1]); 
-if(i+1&lt;&#x3D;c[1]&amp;&amp;k+1&lt;&#x3D;c[3])
-    dp[i+1][j][k+1]&#x3D;max(dp[i+1][j][k+1],dp[i][j][k]+(ll)a[1][i+1]*a[3][k+1]);
-if(j+1&lt;&#x3D;c[2]&amp;&amp;k+1&lt;&#x3D;c[3])
-    dp[i][j+1][k+1]&#x3D;max(dp[i][j+1][k+1],dp[i][j][k]+(ll)a[2][j+1]*a[3][k+1]);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">if(i+1&lt;=c[1]&amp;&amp;j+1&lt;=c[2])
+    dp[i+1][j+1][k]=max(dp[i+1][j+1][k],dp[i][j][k]+(ll)a[1][i+1]*a[2][j+1]); 
+if(i+1&lt;=c[1]&amp;&amp;k+1&lt;=c[3])
+    dp[i+1][j][k+1]=max(dp[i+1][j][k+1],dp[i][j][k]+(ll)a[1][i+1]*a[3][k+1]);
+if(j+1&lt;=c[2]&amp;&amp;k+1&lt;=c[3])
+    dp[i][j+1][k+1]=max(dp[i][j+1][k+1],dp[i][j][k]+(ll)a[2][j+1]*a[3][k+1]);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>想了一下为什么从小到大排序也是可以的：三种类型的木棍，一定有两种木棍是要全部使用的，也就是只有一种木棍可以不用完，而这些不用完的都是最小的那几个。</p>
 <p>因为上面的状态转移方程，$dp_{0,0,123}$之类的都是0，从这个点往上dp推出的结果，也就是b类木棍前123个都不使用得到的结果。所以从小到大排序也是可以的。</p>
@@ -593,16 +595,16 @@ if(j+1&lt;&#x3D;c[2]&amp;&amp;k+1&lt;&#x3D;c[3])
 <p>因此我们分两部分：</p>
 <p>第一部分先从最低的楼层爬到最高的楼层（中间使费用尽量小）。</p>
 <p>第二部分只需要把没爬过的楼房从高往低排列，最后走回最低的楼房即可（这部分不需要任何费用）。</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int now &#x3D; ac[1].ft+ac[1].sd;&#x2F;&#x2F;now是当前房子+梯子的高度
-   &#x2F;&#x2F;之后每步的消耗看作max(0,aj-(ai+ci))
-   rep(i,2,n)&#123;
-       if(ac[i].ft&gt;&#x3D;now)&#x2F;&#x2F;通过梯子上去的情况
-           res +&#x3D; ac[i].ft-now;
-       &#x2F;&#x2F;不加的这些是达到最高之后访问的
-       &#x2F;&#x2F;如果这个楼可以使now更高，也应该在中间免费经过
-       now &#x3D; max(now,ac[i].ft+ac[i].sd);
-   &#125;
-   &#x2F;&#x2F;第二部分经过的楼全部免费<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int now = ac[1].ft+ac[1].sd;//now是当前房子+梯子的高度
+   //之后每步的消耗看作max(0,aj-(ai+ci))
+   rep(i,2,n){
+       if(ac[i].ft&gt;=now)//通过梯子上去的情况
+           res += ac[i].ft-now;
+       //不加的这些是达到最高之后访问的
+       //如果这个楼可以使now更高，也应该在中间免费经过
+       now = max(now,ac[i].ft+ac[i].sd);
+   }
+   //第二部分经过的楼全部免费<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h3 id="【k个字母构造字符串使-a-i-a-j-amp-amp-a-i-1-a-j-1-的ij尽可能少】"><a href="#【k个字母构造字符串使-a-i-a-j-amp-amp-a-i-1-a-j-1-的ij尽可能少】" class="headerlink" title="【k个字母构造字符串使(a[i]==a[j]&amp;&amp;a[i+1]==a[j+1])的ij尽可能少】"></a>【k个字母构造字符串使(a[i]==a[j]&amp;&amp;a[i+1]==a[j+1])的ij尽可能少】</h3><ul>
 <li>【构造】EDU107D 给两个数字n和k，用字母表的前k个字母构造一个长度为n的字符串，每有一对i!=j使得$a_i=a_j,a_{i+1}=a_{j+1}$，则该串的cost+1,问最小cost的构造为？</li>
@@ -617,12 +619,12 @@ if(j+1&lt;&#x3D;c[2]&amp;&amp;k+1&lt;&#x3D;c[3])
 <p>把式子变形，设$a=L\cdot gcd(a,b),b=R\cdot gcd(a,b)$则将式子变形得到$L\cdot R=\frac{\frac{x}{gcd(a,b)}+d\cdot gcd(a,b)}{c}$，观察式子可以发现，x必须是gcd的倍数，因此我们$O(\sqrt{x})$枚举x的所有除数(比赛的时候以为这个是o(x)的),之后右边的值就确定了.</p>
 <p>有了$L\cdot R$的值，然后设$zyz[L\cdot R]$为y的所有质因子数量,先用类似埃式筛的方法筛出每个数字的有多少种不同的质因子。那么这种情况下$(L,R)$有$2^(zyz[L\cdot R])$对。</p>
 <p>哦对，关于统计x所有除数的方法：非常基础，但是我忘掉了</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">rep(i,1,sqr)&#123;
-    if(x%i&#x3D;&#x3D;0)&#123;
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">rep(i,1,sqr){
+    if(x%i==0){
         vec.push_back(i);
-        if(i*i!&#x3D;x) vec.push_back(x&#x2F;i);
-    &#125;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+        if(i*i!=x) vec.push_back(x/i);
+    }
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h3 id="【给一序列-可插入2-ai-aj-问能否得到k】"><a href="#【给一序列-可插入2-ai-aj-问能否得到k】" class="headerlink" title="【给一序列,可插入2*ai-aj,问能否得到k】"></a>【给一序列,可插入2*ai-aj,问能否得到k】</h3><ul>
 <li>【数论,裴蜀定理】CF698D 给一个序列a，长度2e5，每次操作可以选定序列中的任意两个数字x,y.可以把2x-y插入序列中，问能不能通过这种操作拼凑出k（1e18）。</li>
@@ -642,32 +644,32 @@ if(j+1&lt;&#x3D;c[2]&amp;&amp;k+1&lt;&#x3D;c[3])
 <li>rb[i]表示i位置往右边数，最近是哪个数字和他不互质</li>
 </ul>
 <p>我们知道如果要找到当前位置i的下一段，即直接跳转到rb[i]即可。我们倒着做一次循环：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">if(a[i]%prm[j]&#x3D;&#x3D;0)&#123;
-    while(a[i]%prm[j]&#x3D;&#x3D;0) a[i]&#x2F;&#x3D;prm[j];
-    rb[i] &#x3D; min(rb[i],pre[prm[j]]);
-    pre[prm[j]] &#x3D; i;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">if(a[i]%prm[j]==0){
+    while(a[i]%prm[j]==0) a[i]/=prm[j];
+    rb[i] = min(rb[i],pre[prm[j]]);
+    pre[prm[j]] = i;
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>即一个数字有多个质因子组成时，需要找到这些质因子x中pre[x]最小的赋值给rb[i];其次因为在当前位置i上找到了新的包含质数prm[j]的位置，所以也需要更新pre[prm[j]]。</p>
 <p>我们知道rb[i]是i位置经过一次跳转后到达的位置，使用倍增法，我们需要对i位置找出跳转2,4,8,16….次的位置，放在bz[i],[j]中，表示位置i经过$2^j$次跳转后到达的位置。</p>
-<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">rep(i,1,n) bz[i][0] &#x3D; rb[i];
-bz[n+1][0] &#x3D; n+1;
-rep(j,1,20)&#123;
-    bz[n+1][j] &#x3D; n+1;
-    rep(i,1,n)&#123;
-        bz[i][j] &#x3D; bz[bz[i][j-1]][j-1];
-    &#125;
-&#125;   <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">rep(i,1,n) bz[i][0] = rb[i];
+bz[n+1][0] = n+1;
+rep(j,1,20){
+    bz[n+1][j] = n+1;
+    rep(i,1,n){
+        bz[i][j] = bz[bz[i][j-1]][j-1];
+    }
+}   <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>这样一来，我们读入l时，从大往小检测2的倍数，弱没有超过r则执行这次跳跃，并且统计结果。</p>
 <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">cin&gt;&gt;l&gt;&gt;r;
-int cnt &#x3D; 1;
-repb(j,20,0)&#123;&#x2F;&#x2F;从大往小找
-    if(bz[l][j]&lt;&#x3D;r)&#123;&#x2F;&#x2F;如果执行2^j次跳跃不会越界,则执行
-        cnt+&#x3D;(1&lt;&lt;j);
-        l &#x3D; bz[l][j];
-    &#125;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+int cnt = 1;
+repb(j,20,0){//从大往小找
+    if(bz[l][j]&lt;=r){//如果执行2^j次跳跃不会越界,则执行
+        cnt+=(1&lt;&lt;j);
+        l = bz[l][j];
+    }
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>这题还有一些边界需要赋初值，比如rb[n+1]=n+1,所有pre[x]=n+1,以及bz[n+1],[0]=n+1。</p>
 

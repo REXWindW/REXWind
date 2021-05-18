@@ -29,7 +29,9 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
 
 
 
@@ -515,47 +517,47 @@
 #include&lt;algorithm&gt;
 using namespace std;
 
-int cansel_sync&#x3D;(ios::sync_with_stdio(0),cin.tie(0),0);
+int cansel_sync=(ios::sync_with_stdio(0),cin.tie(0),0);
 #define ll long long
-#define rep(i,a,b) for(int i&#x3D;(a);i&lt;&#x3D;(b);i++)
-#define repb(i,a,b) for(int i&#x3D;(a);i&gt;&#x3D;(b);i--)
+#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
+#define repb(i,a,b) for(int i=(a);i&gt;=(b);i--)
 #define INF 0x3f3f3f3f
 
 int n;
-const int MAXN &#x3D; 114514;
+const int MAXN = 114514;
 int a[MAXN],nxt[MAXN];
 
-void solve()&#123;
+void solve(){
     cin&gt;&gt;n;
     rep(i,1,n) cin&gt;&gt;a[i];
-    nxt[n]&#x3D;-1;&#x2F;&#x2F;记录之后最近一次出现两次以上的数字
-    repb(i,n-1,1)&#123;
-        if(a[i]&#x3D;&#x3D;a[i+1]) nxt[i]&#x3D;a[i];
-        else nxt[i]&#x3D;nxt[i+1];
-    &#125;
-    int top[2];&#x2F;&#x2F;两个栈的栈顶元素
-    top[0]&#x3D;top[1]&#x3D;-1;
-    int res&#x3D;0;
-    rep(i,1,n)&#123;
-        if(a[i]&#x3D;&#x3D;a[i+1])&#123;&#x2F;&#x2F;重复长段,放哪儿都一样
-            if(top[0]!&#x3D;a[i]) res++;
-            top[0]&#x3D;a[i];
-        &#125;
-        else&#123;&#x2F;&#x2F;重复长段末尾或单个字符
-            if(top[0]&#x3D;&#x3D;a[i]) res+&#x3D;(top[1]!&#x3D;a[i]),top[1]&#x3D;a[i];
-            else if(top[1]&#x3D;&#x3D;a[i]) res+&#x3D;(top[0]!&#x3D;a[i]),top[0]&#x3D;a[i];
-            else&#123;
-                if(top[0]&#x3D;&#x3D;nxt[i]) res++,top[0]&#x3D;a[i];
-                else res++,top[1]&#x3D;a[i];
-            &#125;
-        &#125;
-    &#125;
+    nxt[n]=-1;//记录之后最近一次出现两次以上的数字
+    repb(i,n-1,1){
+        if(a[i]==a[i+1]) nxt[i]=a[i];
+        else nxt[i]=nxt[i+1];
+    }
+    int top[2];//两个栈的栈顶元素
+    top[0]=top[1]=-1;
+    int res=0;
+    rep(i,1,n){
+        if(a[i]==a[i+1]){//重复长段,放哪儿都一样
+            if(top[0]!=a[i]) res++;
+            top[0]=a[i];
+        }
+        else{//重复长段末尾或单个字符
+            if(top[0]==a[i]) res+=(top[1]!=a[i]),top[1]=a[i];
+            else if(top[1]==a[i]) res+=(top[0]!=a[i]),top[0]=a[i];
+            else{
+                if(top[0]==nxt[i]) res++,top[0]=a[i];
+                else res++,top[1]=a[i];
+            }
+        }
+    }
     cout&lt;&lt;res&lt;&lt;endl;
-&#125;
+}
 
-int main()&#123;
+int main(){
     solve();
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
                 

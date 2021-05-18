@@ -29,7 +29,9 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
 
 
 
@@ -496,16 +498,16 @@
 <p>因此我们分两部分：</p>
 <p>第一部分先从最低的楼层爬到最高的楼层（中间使费用尽量小）。</p>
 <p>第二部分只需要把没爬过的楼房从高往低排列，最后走回最低的楼房即可（这部分不需要任何费用）。</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int now &#x3D; ac[1].ft+ac[1].sd;&#x2F;&#x2F;now是当前房子+梯子的高度
-   &#x2F;&#x2F;之后每步的消耗看作max(0,aj-(ai+ci))
-   rep(i,2,n)&#123;
-       if(ac[i].ft&gt;&#x3D;now)&#x2F;&#x2F;通过梯子上去的情况
-           res +&#x3D; ac[i].ft-now;
-       &#x2F;&#x2F;不加的这些是达到最高之后访问的
-       &#x2F;&#x2F;如果这个楼可以使now更高，也应该在中间免费经过
-       now &#x3D; max(now,ac[i].ft+ac[i].sd);
-   &#125;
-   &#x2F;&#x2F;第二部分经过的楼全部免费<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int now = ac[1].ft+ac[1].sd;//now是当前房子+梯子的高度
+   //之后每步的消耗看作max(0,aj-(ai+ci))
+   rep(i,2,n){
+       if(ac[i].ft&gt;=now)//通过梯子上去的情况
+           res += ac[i].ft-now;
+       //不加的这些是达到最高之后访问的
+       //如果这个楼可以使now更高，也应该在中间免费经过
+       now = max(now,ac[i].ft+ac[i].sd);
+   }
+   //第二部分经过的楼全部免费<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
 
@@ -515,41 +517,41 @@
 #include&lt;algorithm&gt;
 using namespace std;
 
-int cansel_sync&#x3D;(ios::sync_with_stdio(0),cin.tie(0),0);
+int cansel_sync=(ios::sync_with_stdio(0),cin.tie(0),0);
 #define ll long long
-#define rep(i,a,b) for(int i&#x3D;(a);i&lt;&#x3D;(b);i++)
-#define repb(i,a,b) for(int i&#x3D;(a);i&gt;&#x3D;(b);i--)
+#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
+#define repb(i,a,b) for(int i=(a);i&gt;=(b);i--)
 #define INF 0x3f3f3f3f
-ll gcd(ll a,ll b)&#123; while(b^&#x3D;a^&#x3D;b^&#x3D;a%&#x3D;b); return a; &#125;
+ll gcd(ll a,ll b){ while(b^=a^=b^=a%=b); return a; }
 int n;
 typedef pair&lt;int,int&gt; pii;
 #define mkp make_pair
 #define ft first
 #define sd second
-const int MAXN &#x3D; 114514;
+const int MAXN = 114514;
 pii ac[MAXN];
 ll res;
-void solve()&#123;
-    res &#x3D; 0;
+void solve(){
+    res = 0;
     cin&gt;&gt;n;
-    rep(i,1,n) cin&gt;&gt;ac[i].ft&gt;&gt;ac[i].sd,res+&#x3D;ac[i].sd;
+    rep(i,1,n) cin&gt;&gt;ac[i].ft&gt;&gt;ac[i].sd,res+=ac[i].sd;
     sort(ac+1,ac+1+n);
-    int now &#x3D; ac[1].ft+ac[1].sd;&#x2F;&#x2F;now是当前房子+梯子的高度
-    &#x2F;&#x2F;之后每步的消耗看作max(0,aj-(ai+ci))
-    rep(i,2,n)&#123;
-        if(ac[i].ft&gt;&#x3D;now)&#x2F;&#x2F;通过梯子上去的情况
-            res +&#x3D; ac[i].ft-now;
-        &#x2F;&#x2F;不加的这些是达到最高之后访问的
-        &#x2F;&#x2F;如果这个楼可以使now更高，也应该在中间免费经过
-        now &#x3D; max(now,ac[i].ft+ac[i].sd);
-    &#125;
-    &#x2F;&#x2F;第二部分经过的楼全部免费
+    int now = ac[1].ft+ac[1].sd;//now是当前房子+梯子的高度
+    //之后每步的消耗看作max(0,aj-(ai+ci))
+    rep(i,2,n){
+        if(ac[i].ft&gt;=now)//通过梯子上去的情况
+            res += ac[i].ft-now;
+        //不加的这些是达到最高之后访问的
+        //如果这个楼可以使now更高，也应该在中间免费经过
+        now = max(now,ac[i].ft+ac[i].sd);
+    }
+    //第二部分经过的楼全部免费
     cout&lt;&lt;res&lt;&lt;endl;
-&#125;
+}
 
-int main()&#123;
+int main(){
     solve();
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
                 
