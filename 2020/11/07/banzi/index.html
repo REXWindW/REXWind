@@ -480,14 +480,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    13.4k
+                    14.3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    69 分
+                    73 分
                 </div>
                 
 
@@ -2395,6 +2395,87 @@ int main(){
 //洛谷P5490 【模板】扫描线
 //https://www.luogu.com.cn/problem/P5490<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
+<h2 id="CDQ分治"><a href="#CDQ分治" class="headerlink" title="CDQ分治"></a>CDQ分治</h2><p>处理三位偏序问题，以luogu陌上花开为例：<a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3810">https://www.luogu.com.cn/problem/P3810</a></p>
+<p>序列上每个node有a,b,c三个属性，定义函数f(i)为对位置i的序列，存在多少个$j\leq i$使得$a_j\leq a_i,b_j\leq b_i,c_j\leq c_i$。统计完成后问对每个$0&lt;d&lt;n$，有多少个$i$使得$f(i)=d$.</p>
+<p>方法是先对第一维度a进行排序,之后第二维满足$b_j\leq b_i$的每一对i,j，我们分成三种情况:ij都在左半边，ij都在右半边，i在左半边j在右半边。</p>
+<p>前两个通过递归求解，求解完左右子区间后，根据第二关键字对两个子区间分别进行排序，这样一来左半边的a一定小于右半边的a，而且两个区间内的b都呈递增。我们用双指针的方法，右边的pxi每往右移动一次，左边的pxj对应移动，并且把这些j都推入树状数组中，之后根据pxi指向的节点的c属性，查询线段树中c比c[pxi]小的数量即可。</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+using namespace std;
+#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
+const int MAXN = 214514;
+struct node{
+    int a,b,c,cnt,ans;
+}s1[MAXN],s2[MAXN];
+int ans[MAXN];//存对每个d,f[i]==d的i数量
+int n,k,m;
+//树状数组
+int mx;
+int treec[MAXN];
+inline int lowbit(int x){return x&amp;-x;}
+inline void add(int x,int t){
+    while(x&lt;=mx) treec[x]+=t,x+=lowbit(x);
+}
+inline int query(int x){
+    int ret = 0;
+    while(x) ret+=treec[x],x-=lowbit(x);
+    return ret;
+}
+//cdq分治
+bool cmp1(node x,node y){//以a为关键字从小打到排序
+    if(x.a==y.a){
+        if(x.b==y.b) return x.c&lt;y.c;
+        return x.b&lt;y.b;
+    }
+    return x.a&lt;y.a;
+}
+bool cmp2(node x,node y){//根据b排序,便只剩下c的顺序没有满足
+    if(x.b==y.b) return x.c&lt;y.c;
+    return x.b&lt;y.b;
+}
+void cdq(int l,int r){
+    if(l==r) return;
+    int mid = (l+r)&gt;&gt;1;
+    //处理前两种情况:ij同在左/右
+    cdq(l,mid);cdq(mid+1,r);
+    //处理第三种情况:i在左j在右
+    sort(s2+l,s2+mid+1,cmp2);
+    sort(s2+mid+1,s2+r+1,cmp2);
+    int pxj=l,pxi=mid+1;//双指针,对应pxi的移动把pxj插入树状数组中
+    for(pxi=mid+1;pxi&lt;=r;pxi++){
+        while(s2[pxj].b&lt;=s2[pxi].b&amp;&amp;pxj&lt;=mid){
+            add(s2[pxj].c,s2[pxj].cnt);//带次数插入树状数组中
+            pxj++;
+        }
+        s2[pxi].ans+=query(s2[pxi].c);
+        //查询树状数组中c比他小的
+    }
+    rep(j,l,pxj-1) add(s2[j].c,-s2[j].cnt);//之前错在这里,注意只有pxj前面的才被加过,pxj没有
+    //遍历pxj走过的区间,清空树状数组
+}
+int main(){
+    cin&gt;&gt;n&gt;&gt;k;
+    m=0,mx=k;//树状数组的最大数字(类似权值线段树)
+    rep(i,1,n) cin&gt;&gt;s1[i].a&gt;&gt;s1[i].b&gt;&gt;s1[i].c;
+    sort(s1+1,s1+1+n,cmp1);//以a为关键字从小到大排序
+    int tmp=0;//当前这个项出现了几次
+    rep(i,1,n){//合并相同的项并且记录出现次数进cnt
+        tmp++;//当前项出现了几次
+        if(s1[i].a!=s1[i+1].a||s1[i].b!=s1[i+1].b||s1[i].c!=s1[i+1].c){//判断两个node是否不同
+            s2[++m]=s1[i];//m统计元素个数
+            s2[m].cnt = tmp;
+            tmp = 0;
+        }
+    }
+    cdq(1,m);//递归计算
+    //题目问的是f(x)=满足条件ij对数,对应每个x有几个,把结果存到ans[x]中
+    rep(i,1,m) ans[s2[i].ans+s2[i].cnt-1]+=s2[i].cnt;
+    //s2[i].cnt-1是这些数字自己之间满足的对数
+    rep(i,0,n-1) cout&lt;&lt;ans[i]&lt;&lt;endl;
+}
+//洛谷P3810陌上花开
+//https://www.luogu.com.cn/problem/P3810<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 
                 
             </div>
@@ -2911,7 +2992,7 @@ int main(){
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">41.4k</span>
+                        class="white-color">43.2k</span>
             
             
             

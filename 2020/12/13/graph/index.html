@@ -484,14 +484,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.4k
+                    2.2k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    6 分
+                    11 分
                 </div>
                 
 
@@ -514,7 +514,146 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="连通性相关"><a href="#连通性相关" class="headerlink" title="连通性相关"></a>连通性相关</h2><h3 id="Tarjan求强连通分量"><a href="#Tarjan求强连通分量" class="headerlink" title="Tarjan求强连通分量"></a>Tarjan求强连通分量</h3><p>可以用于有向图问题的缩点。</p>
+                <h2 id="网络流相关"><a href="#网络流相关" class="headerlink" title="网络流相关"></a>网络流相关</h2><h3 id="SFPA"><a href="#SFPA" class="headerlink" title="SFPA"></a>SFPA</h3><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include&lt;iostream&gt;
+#include&lt;queue&gt;
+#include&lt;vector&gt;
+using namespace std;
+#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
+#define ll long long
+const int MAXN = 114514;
+const int MAXM = 514514;
+const ll LINF = 1ll&lt;&lt;61;
+//前向星
+struct Edge{
+    int to,w,nxt;
+}edges[MAXM];
+int head[MAXN];
+int n,m,s;
+int cnt;
+inline void add_edge(int u,int v,int w){
+    edges[cnt].to = v;
+    edges[cnt].w = w;
+    edges[cnt].nxt = head[u];
+    head[u] = cnt++;
+}
+//SPFA
+queue&lt;int&gt; q;
+ll dis[MAXN];//每个点当前最小距离
+bool vis[MAXN];//记录队列中是否有该点
+inline void init(){//初始化前向星和SPFA的dis数组
+    rep(i,1,n) dis[i]=LINF,head[i]=-1;
+    cnt = 0;
+}
+inline void solve(){
+    cin&gt;&gt;n&gt;&gt;m&gt;&gt;s;
+    init();//记得要初始化
+    int u,v,w;
+    rep(i,1,m){
+        cin&gt;&gt;u&gt;&gt;v&gt;&gt;w;
+        add_edge(u,v,w);
+    }
+    dis[s] = 0;
+    q.push(s);
+    int now;
+    while(!q.empty()){
+        now = q.front();
+        q.pop();
+        vis[now] = 0;//vis表示队中有无该点
+        //每次取出队首,并检查关联点是否可以进行松弛操作
+        for(int i=head[now];i!=-1;i=edges[i].nxt){
+            v = edges[i].to;
+            if(dis[v]&gt;dis[now]+edges[i].w){//松弛操作
+                dis[v] = dis[now]+edges[i].w;
+                if(!vis[v]){//如果队列中没有点v,则将v入队
+                    vis[v] = 1;
+                    q.push(v);
+                }
+            }
+        }
+    }
+    rep(i,1,n) cout&lt;&lt;dis[i]&lt;&lt;' ';
+    //我这里还没有对到达不了的特殊情况进行处理
+    cout&lt;&lt;endl;
+}
+int main(){
+    solve();
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="费用流-SPFA找最短增广路"><a href="#费用流-SPFA找最短增广路" class="headerlink" title="费用流-SPFA找最短增广路"></a>费用流-SPFA找最短增广路</h3><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include&lt;iostream&gt;
+using namespace std;
+#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
+#define INF 0x7fffffff
+const int N = 5e3+5;
+const int M = 114514;//因为是双向边,要记得开两倍大的数组!
+int n;
+//前向星存图
+int t=1;//总边数
+int u[M],v[M],c[M],co[M],nxt[M],head[M];
+inline void add_edge(int x,int y,int z,int zo){//起点终点流量费用
+    u[++t]=x;v[t]=y;//正向边
+    c[t]=z;co[t]=zo;
+    nxt[t]=head[x];head[x]=t;
+    u[++t]=y;v[t]=x;//反向边
+    c[t]=0;co[t]=-zo;
+    nxt[t]=head[y];head[y]=t;
+}
+//SPFA
+int S,T;
+int q[M],l,r;//双端队列
+int dis[N];
+bool in[N];//在不在queue中
+int f[N];//记录路径
+inline bool spfa(){
+    rep(i,1,n) in[i]=0,dis[i]=INF;//初始化
+    dis[S]=0;in[S]=1;
+    l=r=M&gt;&gt;1;q[l]=S;//手写队列
+    while(l&lt;=r){
+        int now=q[l++];//取队首
+        if(now==T) continue;
+        for(int i=head[now];i;i=nxt[i])
+            if(c[i]&amp;&amp;dis[now]+co[i]&lt;dis[v[i]]){//费用更小的路
+                dis[v[i]]=dis[now]+co[i];
+                f[v[i]]=i;//记录路径!增广路经过哪些边
+                if(!in[v[i]]){//如果队中没有则入队
+                    in[v[i]]=1;
+                    if(dis[v[i]]&lt;dis[q[l]])q[--l]=v[i];else q[++r]=v[i];
+                    //双端队列优化spfa
+                }
+            }
+        in[now]=0;
+    }
+    return dis[T]&lt;INF;//是否找到增广路
+}
+int i,tmp;
+inline void costflow(){
+    int ans=0,flow=0;//最小费用,最大流
+    while(spfa()){
+        //从终点根据记录的f找到增广路
+        for(tmp=INF,i=T;i!=S;i=u[f[i]]) if(tmp&gt;c[f[i]]) tmp=c[f[i]];
+        //求这一次流多少(所有边剩余流量中最小值)
+        for(ans+=dis[i=T]*tmp;i!=S;i=u[f[i]]) c[f[i]]-=tmp,c[f[i]^1]+=tmp;
+        //减去流量并加在反向边上,并且计算费用
+        flow+=tmp;
+    }
+    printf("%d %d\n",flow,ans);
+}
+int main(){
+    int m;
+    scanf("%d%d%d%d",&amp;n,&amp;m,&amp;S,&amp;T);
+    int u,v,z,zo;
+    while(m--){
+        scanf("%d%d%d%d",&amp;u,&amp;v,&amp;z,&amp;zo);
+        add_edge(u,v,z,zo);
+    }
+    costflow();
+}
+//参考claris费用流板子
+//洛谷P3381
+//https://www.luogu.com.cn/problem/P3381<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="连通性相关"><a href="#连通性相关" class="headerlink" title="连通性相关"></a>连通性相关</h2><h3 id="Tarjan求强连通分量"><a href="#Tarjan求强连通分量" class="headerlink" title="Tarjan求强连通分量"></a>Tarjan求强连通分量</h3><p>可以用于有向图问题的缩点。</p>
 <p>$dfn[u]$记录当前节点u是第几个访问到的；</p>
 <p>$low[u]$定义为$Subtree(u)$中$dfn(u)$最小的，或者$Subtree(u)$中的点通过**非树边(不在子树上的边)**（返祖边或者比$rt$还高的边？）$low[u]$初始值定u，如果通过边连到$rt$之上的点可更新，又递归通过儿子$low[v]$来更新。</p>
 <p>连通图中有且仅有一个$dfn[u]=low[u]$,这个点是根节点。通过一个栈按照dfs的顺序入栈，回溯的时候判断如果一个点的$dfn[u]=low[u]$，则从这个点到栈顶的所有节点归入一个强连通分量。</p>
@@ -1229,7 +1368,7 @@ void tarjan(int u, int fa) {
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">41.4k</span>
+                        class="white-color">43.2k</span>
             
             
             
