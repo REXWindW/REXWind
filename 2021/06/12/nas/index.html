@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="用Git Bash命令行提交修改, REXWind&#39;s Blog">
+    <meta name="keywords" content="整了个NAS和DDNS, REXWind&#39;s Blog">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>用Git Bash命令行提交修改 | REXWind&#39;s Blog</title>
+    <title>整了个NAS和DDNS | REXWind&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -325,12 +325,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/img/erciyuan/maoniang.png')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/img/erciyuan/shuai.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">用Git Bash命令行提交修改</h1>
+                    <h1 class="description center-align post-title">整了个NAS和DDNS</h1>
                 </div>
             </div>
         </div>
@@ -446,12 +446,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/git/">
-                                <span class="chip bg-color">git</span>
+                            <a href="/tags/%E6%8D%A1%E5%9E%83%E5%9C%BE/">
+                                <span class="chip bg-color">捡垃圾</span>
                             </a>
                         
-                            <a href="/tags/github/">
-                                <span class="chip bg-color">github</span>
+                            <a href="/tags/Openwrt/">
+                                <span class="chip bg-color">Openwrt</span>
                             </a>
                         
                     </div>
@@ -475,7 +475,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-11-09
+                    2021-06-12
                 </div>
                 
 
@@ -484,7 +484,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    375
+                    540
                 </div>
                 
 
@@ -514,46 +514,17 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="SSH-Key的获取"><a href="#SSH-Key的获取" class="headerlink" title="SSH-Key的获取"></a>SSH-Key的获取</h1><p>这篇帖子讲的非常详细了</p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/duanming/p/11830251.html">https://www.cnblogs.com/duanming/p/11830251.html</a></p>
-<h1 id="连接到github仓库"><a href="#连接到github仓库" class="headerlink" title="连接到github仓库"></a>连接到github仓库</h1><h2 id="初始化本地仓库"><a href="#初始化本地仓库" class="headerlink" title="初始化本地仓库"></a>初始化本地仓库</h2><ul>
-<li>先在命令行进入想要作为仓库的位置，输入</li>
-</ul>
-<pre class="line-numbers language-none"><code class="language-none">git init<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>  初始化为本地仓库（之后文件夹里多了一个.git）</p>
-<h2 id="连接到远程仓库"><a href="#连接到远程仓库" class="headerlink" title="连接到远程仓库"></a>连接到远程仓库</h2><ul>
-<li>在github的仓库页面把这个东西复制下来</li>
-</ul>
-<p><img src="/img/git_update/git-ssh.png" alt="git-ssh"></p>
-<ul>
-<li>接着添加一个远程仓库，输入</li>
-</ul>
-<pre class="line-numbers language-none"><code class="language-none">git remote add origin 这里填刚刚复制的东西
-以我的为例就是
-git remote add origin git@github.com:REXWindW/REXWindW.git<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-
-
-
-<h2 id="关联分支并push"><a href="#关联分支并push" class="headerlink" title="关联分支并push"></a>关联分支并push</h2><ul>
-<li>接着我们开始我们的第一次push，把当前分支master推送到远程仓库。</li>
-</ul>
-<pre class="line-numbers language-none"><code class="language-none">git push -u origin master<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>因为远程库是空的，第一次推送master增加一个<code>-u</code>参数，这样Git不仅仅会把本地的master分支的内容推送到远程GitHub仓库中新的master分支，还会<strong>把本地的master分支和远程的master分支关联起来</strong>。</p>
-<p>在以后的推送和拉取就可以简化命令了，简化命令即</p>
-<pre class="line-numbers language-none"><code class="language-none">git push<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p><strong>但是之后每次push之前其实还需要进行一些操作</strong></p>
-<h1 id="之后要怎么push"><a href="#之后要怎么push" class="headerlink" title="之后要怎么push"></a>之后要怎么push</h1><h2 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h2><pre class="line-numbers language-none"><code class="language-none">git add .  //暂存所有的更改，注意后面有个点!这样才能把所有的更改暂存
-git checkout . // 丢弃所有的更改
-git status // 查看文件状态
-git commit -m "本次要提交的概要信息" //加上这次提交的备注
-git push //提交<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-
-
-<h2 id="操作流程"><a href="#操作流程" class="headerlink" title="操作流程"></a>操作流程</h2><p><img src="/img/git_update/update.png" alt="update"></p>
+                <h2 id="大致步骤"><a href="#大致步骤" class="headerlink" title="大致步骤"></a>大致步骤</h2><p>注意：下面参考了很多个帖子，但是知识用到了说明说到的部分，其他部分不要和他们搞一样就行了。</p>
+<p>我的openwrt已经装好ddns插件和luci-app-ddns了。一开始我用的aliddns，但是似乎有点问题，不能正常运行，而且日志文件也没有任何输出，之后就换了普通的ddns插件。</p>
+<p>1.购买了阿里的域名，并且根据这个视频的方法创建了用户，添加了域名解析权限，并且声称accesskey。</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1n741147yj">OpenWrt软路由设置阿里云DDNS动态域名解析教程_哔哩哔哩_bilibili</a></p>
+<p>2.设置端口转发，就是把内网中某个地址下的某个端口，映射到公网ip的某个端口上，在openwrt的防火墙设置里可以设置端口转发。</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1sb41157Lk">【视频教程】手把手教你用OpenWRT路由器进行端口转发_哔哩哔哩_bilibili</a></p>
+<p>3.在openwrt设置ddns，在概况里添加ipv4的动态dns，看公网ip在哪个接口里，我的电信闪讯是在wan口，把域名设置一下即可，记得设置一下子域名，形如nas.example.com中的nas，这个子域名到时候是要填在阿里云控制台的域名解析里面的。</p>
+<p><a target="_blank" rel="noopener" href="https://post.smzdm.com/p/a6lrn3l0/">我的软路由折腾之旅 篇四：Openwrt by Lean搞定花生壳+3322 DDNS，洗白黑群晖远程/定时唤醒_NAS存储_什么值得买 (smzdm.com)</a></p>
+<p>4.之后在阿里云控制台的域名解析中创建一个A记录，这里的公网ip可以乱设置，因为之后路由器那边会把正确的ip更新上来。很遗憾阿里的频率最快也只能设置10分钟。</p>
+<p>5.这里有一个挺好看的视频，讲了由于阿里云更新比较慢，有时候可能需要几个小时，所以在每天晚上定一个时间来重启路由器，可以尽量把这个公网ip更换的时间放在晚上睡觉后。</p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/zvideo/1254589422701576192">(1 条消息) 软路由玩6年 OPENWRT设置 插件哪坑哪好及DDNS设置 - 知乎 (zhihu.com)</a></p>
 
                 
             </div>
@@ -580,7 +551,7 @@ git push //提交<span aria-hidden="true" class="line-numbers-rows"><span></span
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2020/11/09/git-update/">http://example.com/2020/11/09/git-update/</a>
+                    <a href="http://example.com/2021/06/12/nas/">http://example.com/2021/06/12/nas/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -618,12 +589,12 @@ git push //提交<span aria-hidden="true" class="line-numbers-rows"><span></span
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/git/">
-                                    <span class="chip bg-color">git</span>
+                                <a href="/tags/%E6%8D%A1%E5%9E%83%E5%9C%BE/">
+                                    <span class="chip bg-color">捡垃圾</span>
                                 </a>
                             
-                                <a href="/tags/github/">
-                                    <span class="chip bg-color">github</span>
+                                <a href="/tags/Openwrt/">
+                                    <span class="chip bg-color">Openwrt</span>
                                 </a>
                             
                         </div>
@@ -794,7 +765,7 @@ git push //提交<span aria-hidden="true" class="line-numbers-rows"><span></span
         repo: 'REXWindW.github.io',
         owner: 'REXWindW',
         admin: "REXWindW",
-        id: '2020-11-09T17-17-54',
+        id: '2021-06-12T05-14-00',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -822,28 +793,29 @@ git push //提交<span aria-hidden="true" class="line-numbers-rows"><span></span
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2020/11/15/wsl/">
+                <a href="/2021/06/12/nas/">
                     <div class="card-image">
                         
-                        <img src="/img/erciyuan/zimeizi.png" class="responsive-img" alt="WSL (Windows Subsystem for Linux)">
+                        <img src="/img/erciyuan/shuai.jpg" class="responsive-img" alt="整了个NAS和DDNS">
                         
-                        <span class="card-title">WSL (Windows Subsystem for Linux)</span>
+                        <span class="card-title">整了个NAS和DDNS</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            第一篇题解，学着使用了图片
+                            整了一个黑群晖大猫盘，在openwrt路由器上搞了动态dns
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-11-15
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-06-12
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -856,15 +828,16 @@ git push //提交<span aria-hidden="true" class="line-numbers-rows"><span></span
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/linux/">
-                        <span class="chip bg-color">linux</span>
+                    <a href="/tags/%E6%8D%A1%E5%9E%83%E5%9C%BE/">
+                        <span class="chip bg-color">捡垃圾</span>
                     </a>
                     
-                    <a href="/tags/vscode/">
-                        <span class="chip bg-color">vscode</span>
+                    <a href="/tags/Openwrt/">
+                        <span class="chip bg-color">Openwrt</span>
                     </a>
                     
                 </div>
@@ -878,30 +851,30 @@ git push //提交<span aria-hidden="true" class="line-numbers-rows"><span></span
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/11/08/matjax-tips/">
+                <a href="/2021/05/18/new-theme/">
                     <div class="card-image">
                         
-                        <img src="/img/erciyuan/ling.jpg" class="responsive-img" alt="Mathjax内联公式出错的问题与解决方案">
+                        <img src="/img/erciyuan/chengshi.jpg" class="responsive-img" alt="博客新主题">
                         
-                        <span class="card-title">Mathjax内联公式出错的问题与解决方案</span>
+                        <span class="card-title">博客新主题</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            今天公式的显示一直出问题，最后发现是mathjax的内联公式对转义字符\的支持不足
+                            因为换了mac,移植博客的时候顺带换了一个主题
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-11-08
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-05-18
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%8D%9A%E5%AE%A2%E7%BB%B4%E6%8A%A4/" class="post-category">
-                                    博客维护
+                            <a href="/categories/%E9%9A%8F%E7%AC%94/" class="post-category">
+                                    随笔
                                 </a>
                             
                             
@@ -911,8 +884,8 @@ git push //提交<span aria-hidden="true" class="line-numbers-rows"><span></span
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/mathjax/">
-                        <span class="chip bg-color">mathjax</span>
+                    <a href="/tags/%E9%9A%8F%E7%AC%94/">
+                        <span class="chip bg-color">随笔</span>
                     </a>
                     
                 </div>
