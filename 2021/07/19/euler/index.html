@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Codeforces Round /#712 (Div. 2) E. Travelling Salesman Problem, REXWind&#39;s Blog">
+    <meta name="keywords" content="关于欧拉降幂, REXWind&#39;s Blog">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Codeforces Round /#712 (Div. 2) E. Travelling Salesman Problem | REXWind&#39;s Blog</title>
+    <title>关于欧拉降幂 | REXWind&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -325,12 +325,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/img/erciyuan/laoshi.png')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/img/erciyuan/saber.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Codeforces Round /#712 (Div. 2) E. Travelling Salesman Problem</h1>
+                    <h1 class="description center-align post-title">关于欧拉降幂</h1>
                 </div>
             </div>
         </div>
@@ -446,16 +446,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E9%A2%98%E8%A7%A3/">
-                                <span class="chip bg-color">题解</span>
+                            <a href="/tags/%E6%95%B0%E5%AD%A6/">
+                                <span class="chip bg-color">数学</span>
                             </a>
                         
-                            <a href="/tags/Codeforces/">
-                                <span class="chip bg-color">Codeforces</span>
+                            <a href="/tags/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+                                <span class="chip bg-color">算法学习笔记</span>
                             </a>
                         
-                            <a href="/tags/DP/">
-                                <span class="chip bg-color">DP</span>
+                            <a href="/tags/%E6%95%B0%E8%AE%BA/">
+                                <span class="chip bg-color">数论</span>
                             </a>
                         
                     </div>
@@ -479,7 +479,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-04-06
+                    2021-07-19
                 </div>
                 
 
@@ -488,14 +488,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    714
+                    861
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    3 分
+                    4 分
                 </div>
                 
 
@@ -518,69 +518,128 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="题目地址"><a href="#题目地址" class="headerlink" title="题目地址"></a>题目地址</h1><p><a target="_blank" rel="noopener" href="https://codeforces.com/contest/1504/problem/E">https://codeforces.com/contest/1504/problem/E</a></p>
-<h1 id="题目大意"><a href="#题目大意" class="headerlink" title="题目大意"></a>题目大意</h1><p>有n(1e5)个城市，每个城市有ai和ci两个属性，从城市i到城市j的费用为$max(c_i,a_j-c_i)$,问从任一城市开始经过所有城市再回到该城市所需要的最小费用。</p>
-<h1 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h1><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>我们观察这条式子：$cost(i,j)=max(c_i,a_j-c_i)$,可以知道$c_i$是逃不掉的，因此我们把c全部都先加到结果$res$上，这样每条边的费用就变成了$cost(i,j)=max(0,a_j-(a_i+c_i))$。</p>
-<p>我们可以形象地把ai理解成楼房的高度，ci理解成这个楼房的梯子高度，我们在楼房i上时，如果楼房高度和梯子高度之和高于楼房j的高度，则可以免费从i爬到j，否则则需要补上这些高度的差。即从楼高+梯子较高的楼房爬到低的是不需要费用的。</p>
-<h2 id="解"><a href="#解" class="headerlink" title="解"></a>解</h2><p>以a为第一关键字，c为第二关键字对房子排序。</p>
-<p>因此我们分两部分：</p>
-<p>第一部分先从最低的楼层爬到最高的楼层（中间使费用尽量小）。</p>
-<p>第二部分只需要把没爬过的楼房从高往低排列，最后走回最低的楼房即可（这部分不需要任何费用）。</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int now = ac[1].ft+ac[1].sd;//now是当前房子+梯子的高度
-   //之后每步的消耗看作max(0,aj-(ai+ci))
-   rep(i,2,n){
-       if(ac[i].ft&gt;=now)//通过梯子上去的情况
-           res += ac[i].ft-now;
-       //不加的这些是达到最高之后访问的
-       //如果这个楼可以使now更高，也应该在中间免费经过
-       now = max(now,ac[i].ft+ac[i].sd);
-   }
-   //第二部分经过的楼全部免费<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-
-
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include&lt;iostream&gt;
-#include&lt;cstring&gt;
-#include&lt;cstdio&gt;
-#include&lt;algorithm&gt;
+                <h1 id="欧拉降幂"><a href="#欧拉降幂" class="headerlink" title="欧拉降幂"></a>欧拉降幂</h1><p>起因是因为牛客多校的一个数论题，需要计算组合数作为次数，即$a^{C_x^t}\mod p$,我在计算C的时候用p作为模数，导致了结果的错误。</p>
+<p>洛谷欧拉降幂模板题：</p>
+<p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P5091">P5091 【模板】扩展欧拉定理 - 洛谷 | 计算机科学教育新生态 (luogu.com.cn)</a></p>
+<h2 id="欧拉定理：要求a和p互质"><a href="#欧拉定理：要求a和p互质" class="headerlink" title="欧拉定理：要求a和p互质"></a>欧拉定理：要求a和p互质</h2><p>证明：<a target="_blank" rel="noopener" href="https://oi-wiki.org/math/euler/">欧拉函数 - OI Wiki (oi-wiki.org)</a></p>
+<p>$a^{\phi(p)} \mod p = 1$</p>
+<p>则有$a^b \mod p=a^{b\mod\phi(p) }$</p>
+<h2 id="扩展欧拉降幂：不要求a和p互质，按照b和-phi-p-比较分两类"><a href="#扩展欧拉降幂：不要求a和p互质，按照b和-phi-p-比较分两类" class="headerlink" title="扩展欧拉降幂：不要求a和p互质，按照b和$\phi(p)$比较分两类"></a>扩展欧拉降幂：不要求a和p互质，按照b和$\phi(p)$比较分两类</h2><p>$a^b \mod p = a^{b}(b&lt;\phi(p))$</p>
+<p>$a^b \mod p = a^{(b\mod\phi(p))+\phi(p)}(b&lt;\phi(p))$</p>
+<p>故我用一个flag来记录b是否有超过phi(p)的情况，来判断最后是否在次数上加上phi(p)</p>
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include&lt;iostream&gt;
+#include&lt;cmath&gt;
 using namespace std;
-
-int cansel_sync=(ios::sync_with_stdio(0),cin.tie(0),0);
 #define ll long long
 #define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
-#define repb(i,a,b) for(int i=(a);i&gt;=(b);i--)
-#define INF 0x3f3f3f3f
-ll gcd(ll a,ll b){ while(b^=a^=b^=a%=b); return a; }
-int n;
-typedef pair&lt;int,int&gt; pii;
-#define mkp make_pair
-#define ft first
-#define sd second
-const int MAXN = 114514;
-pii ac[MAXN];
-ll res;
-void solve(){
-    res = 0;
-    cin&gt;&gt;n;
-    rep(i,1,n) cin&gt;&gt;ac[i].ft&gt;&gt;ac[i].sd,res+=ac[i].sd;
-    sort(ac+1,ac+1+n);
-    int now = ac[1].ft+ac[1].sd;//now是当前房子+梯子的高度
-    //之后每步的消耗看作max(0,aj-(ai+ci))
-    rep(i,2,n){
-        if(ac[i].ft&gt;=now)//通过梯子上去的情况
-            res += ac[i].ft-now;
-        //不加的这些是达到最高之后访问的
-        //如果这个楼可以使now更高，也应该在中间免费经过
-        now = max(now,ac[i].ft+ac[i].sd);
-    }
-    //第二部分经过的楼全部免费
-    cout&lt;&lt;res&lt;&lt;endl;
+ll a,b,med;
+#define int ll
+ll qpow(ll d,ll c){//快速幂
+    ll res = 1;
+    while(c){
+        if(c&amp;1) res=res*d%med;
+        d=d*d%med;c&gt;&gt;=1;
+    }return res;
 }
+int euler_phi(int n){
+    int sqr = sqrt(n+0.5);
+    int res = n; 
+    for(int i=2;i&lt;=sqr;i++){
+        if(n%i==0){//找到一个质因子 
+            res = res/i*(i-1);//先除后乘，防止越界 
+            while(n%i==0) n/=i;//把这个因子从n中消除掉 
+        }
+    }
+    if(n&gt;1) res = res/n*(n-1);//大于sqrt的因子最多只有一个 
+    return res; 
+}
+string s;
+signed main(){
+    cin&gt;&gt;a&gt;&gt;med;
+    ll phi = euler_phi(med);
+    cin&gt;&gt;s;
+    int siz = s.size();
+    b = 0;
+    int flag = 0;
+    rep(i,0,siz-1){
+        b = b*10;
+        b = (b+s[i]-'0');
+        if(b&gt;=phi) flag = 1;
+        b%=phi;
+    }
+    cout&lt;&lt;qpow(a,b+flag*phi)&lt;&lt;endl;
+}
+//P5091 【模板】扩展欧拉定理
+//https://www.luogu.com.cn/problem/P5091<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-int main(){
-    solve();
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>题解里给的数据加强版，a和m的范围变成了1e12,需要用龟速乘</p>
+<p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/U55950">U55950 【模板】扩展欧拉定理 - 洛谷 | 计算机科学教育新生态 (luogu.com.cn)</a></p>
+<h2 id="龟速乘"><a href="#龟速乘" class="headerlink" title="龟速乘"></a>龟速乘</h2><p>如果x和y直接相乘会爆ll，则可以使用龟速乘。</p>
+<p>看代码就很容易理解，即把y按二进制拆分，从低位往高位移动，每次把x乘上2再取模。</p>
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">ll gui_mul(ll x,ll y){//龟速乘
+    ll res = 0;
+    while(y!=0){
+        if(y&amp;1)res+=x,res%=med;
+        x+=x,x%=med;//y的位数每次往上,对应的权值*2
+        y&gt;&gt;=1;
+    }
+    return res;
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
+<p>结合龟速乘后的完整代码：</p>
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include&lt;iostream&gt;
+#include&lt;cmath&gt;
+using namespace std;
+#define ll long long
+#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
+ll a,b,med;
+#define int ll
+ll gui_mul(ll x,ll y){//龟速乘
+    ll res = 0;
+    while(y!=0){
+        if(y&amp;1)res+=x,res%=med;
+        x+=x,x%=med;
+        y&gt;&gt;=1;
+    }
+    return res;
+}
+ll qpow(ll d,ll c){//快速幂
+    ll res = 1;
+    while(c){
+        if(c&amp;1) res=gui_mul(res,d);
+        d=gui_mul(d,d);c&gt;&gt;=1;
+    }return res;
+}
+int euler_phi(int n){
+    int sqr = sqrt(n+0.5);
+    int res = n; 
+    for(int i=2;i&lt;=sqr;i++){
+        if(n%i==0){//找到一个质因子 
+            res = res/i*(i-1);//先除后乘，防止越界 
+            while(n%i==0) n/=i;//把这个因子从n中消除掉 
+        }
+    }
+    if(n&gt;1) res = res/n*(n-1);//大于sqrt的因子最多只有一个 
+    return res; 
+}
+string s;
+signed main(){
+    cin&gt;&gt;a&gt;&gt;med;
+    ll phi = euler_phi(med);
+    cin&gt;&gt;s;
+    int siz = s.size();
+    b = 0;
+    int flag = 0;
+    rep(i,0,siz-1){
+        b = b*10;
+        b = (b+s[i]-'0');
+        if(b&gt;=phi) flag = 1;
+        b%=phi;
+    }
+    cout&lt;&lt;qpow(a,b+flag*phi)&lt;&lt;endl;
+}
+//P5091 【模板】扩展欧拉定理
+//https://www.luogu.com.cn/problem/P5091<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
                 
             </div>
@@ -607,7 +666,7 @@ int main(){
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2021/04/06/cf-712/">http://example.com/2021/04/06/cf-712/</a>
+                    <a href="http://example.com/2021/07/19/euler/">http://example.com/2021/07/19/euler/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -645,16 +704,16 @@ int main(){
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E9%A2%98%E8%A7%A3/">
-                                    <span class="chip bg-color">题解</span>
+                                <a href="/tags/%E6%95%B0%E5%AD%A6/">
+                                    <span class="chip bg-color">数学</span>
                                 </a>
                             
-                                <a href="/tags/Codeforces/">
-                                    <span class="chip bg-color">Codeforces</span>
+                                <a href="/tags/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+                                    <span class="chip bg-color">算法学习笔记</span>
                                 </a>
                             
-                                <a href="/tags/DP/">
-                                    <span class="chip bg-color">DP</span>
+                                <a href="/tags/%E6%95%B0%E8%AE%BA/">
+                                    <span class="chip bg-color">数论</span>
                                 </a>
                             
                         </div>
@@ -825,7 +884,7 @@ int main(){
         repo: 'REXWindW.github.io',
         owner: 'REXWindW',
         admin: "REXWindW",
-        id: '2021-04-06T10-35-35',
+        id: '2021-07-19T20-32-23',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -853,79 +912,28 @@ int main(){
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2021/04/09/linear/">
+                <a href="/2021/07/19/euler/">
                     <div class="card-image">
                         
-                        <img src="/img/erciyuan/star.jpg" class="responsive-img" alt="多元线性回归——波士顿房价问题 学习笔记">
+                        <img src="/img/erciyuan/saber.jpg" class="responsive-img" alt="关于欧拉降幂">
                         
-                        <span class="card-title">多元线性回归——波士顿房价问题 学习笔记</span>
+                        <span class="card-title">关于欧拉降幂</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            波士顿房价问题的学习笔记
-                        
-                    </div>
-                    <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-04-09
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/CNN/" class="post-category">
-                                    CNN
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/python/">
-                        <span class="chip bg-color">python</span>
-                    </a>
-                    
-                    <a href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/">
-                        <span class="chip bg-color">线性回归</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2021/02/16/cf-700d/">
-                    <div class="card-image">
-                        
-                        <img src="/img/erciyuan/xiaoyang.jpg" class="responsive-img" alt="Codeforces Round /#700 D1. Painting the Array I">
-                        
-                        <span class="card-title">Codeforces Round /#700 D1. Painting the Array I</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            很神奇的预处理思路，想得到要贪心但想不到这种预处理。
+                            关于欧拉降幂
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-02-16
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-07-19
                             </span>
                         <span class="publish-author">
                             
@@ -939,19 +947,72 @@ int main(){
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E9%A2%98%E8%A7%A3/">
-                        <span class="chip bg-color">题解</span>
+                    <a href="/tags/%E6%95%B0%E5%AD%A6/">
+                        <span class="chip bg-color">数学</span>
                     </a>
                     
-                    <a href="/tags/Codeforces/">
-                        <span class="chip bg-color">Codeforces</span>
+                    <a href="/tags/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+                        <span class="chip bg-color">算法学习笔记</span>
                     </a>
                     
-                    <a href="/tags/%E8%B4%AA%E5%BF%83/">
-                        <span class="chip bg-color">贪心</span>
+                    <a href="/tags/%E6%95%B0%E8%AE%BA/">
+                        <span class="chip bg-color">数论</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/06/12/nas/">
+                    <div class="card-image">
+                        
+                        <img src="/img/erciyuan/shuai.jpg" class="responsive-img" alt="整了个NAS和DDNS">
+                        
+                        <span class="card-title">整了个NAS和DDNS</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            整了一个黑群晖大猫盘，在openwrt路由器上搞了动态dns
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-06-12
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9F%A5%E8%AF%86/" class="post-category">
+                                    计算机知识
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%8D%A1%E5%9E%83%E5%9C%BE/">
+                        <span class="chip bg-color">捡垃圾</span>
+                    </a>
+                    
+                    <a href="/tags/Openwrt/">
+                        <span class="chip bg-color">Openwrt</span>
                     </a>
                     
                 </div>

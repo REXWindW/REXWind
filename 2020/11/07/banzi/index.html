@@ -480,14 +480,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    14.3k
+                    14.5k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    73 分
+                    74 分
                 </div>
                 
 
@@ -510,7 +510,7 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="头文件"><a href="#头文件" class="headerlink" title="头文件"></a>头文件</h1><h2 id="CF头"><a href="#CF头" class="headerlink" title="CF头"></a>CF头</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include&lt;iostream&gt;
+                <h1 id="小tips"><a href="#小tips" class="headerlink" title="小tips"></a>小tips</h1><h2 id="CF头"><a href="#CF头" class="headerlink" title="CF头"></a>CF头</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include&lt;iostream&gt;
 #include&lt;cstring&gt;
 #include&lt;cstdio&gt;
 #include&lt;algorithm&gt;
@@ -536,6 +536,17 @@ typedef pair&lt;ll,ll&gt; pll;
 ll gcd(ll a,ll b){ while(b^=a^=b^=a%=b); return a; }
 //#define INF 0x7fffffff<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
+<h2 id="集合操作"><a href="#集合操作" class="headerlink" title="集合操作"></a>集合操作</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">//并交集
+vector&lt;int&gt; ANS;
+set_union(s1.begin(),s1.end(),s2.begin(),s2.end(),inserter(ANS,ANS.begin()));//set_intersection()
+
+//通过迭代器遍历集合
+set&lt;char&gt;::iterator iter = temp1.begin();
+while (iter!=temp1.end()){
+	cout&lt;&lt;*iter;
+	iter++;
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h2 id="快读快写"><a href="#快读快写" class="headerlink" title="快读快写"></a>快读快写</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">template&lt;class T&gt;inline void read(T &amp;x){x=0;char o,f=1;while(o=getchar(),o&lt;48)if(o==45)f=-f;do x=(x&lt;&lt;3)+(x&lt;&lt;1)+(o^48);while(o=getchar(),o&gt;47);x*=f;}
 template&lt;class T&gt;
 void wt(T x){//快写
@@ -543,6 +554,30 @@ void wt(T x){//快写
    if(x &gt;= 10) wt(x / 10);
    putchar('0' + x % 10);
 }<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="int128"><a href="#int128" class="headerlink" title="__int128"></a>__int128</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">inline __int128 read(){
+    __int128 x=0,f=1;
+    char ch=getchar();
+    while(ch&lt;‘0‘||ch&gt;‘9‘){
+        if(ch==‘-‘)
+            f=-1;
+        ch=getchar();
+    }
+    while(ch&gt;=‘0‘&amp;&amp;ch&lt;=‘9‘){
+        x=x*10+ch-‘0‘;
+        ch=getchar();
+    }
+    return x*f;
+}
+inline void print(__int128 x){
+    if(x&lt;0){
+        putchar(‘-‘);
+        x=-x;
+    }
+    if(x&gt;9)
+        print(x/10);
+    putchar(x%10+‘0‘);
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
 
@@ -1219,8 +1254,7 @@ int main(){
     printf("\n");
 }<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-
-
+<p><strong>//待改</strong></p>
 <h1 id="图论"><a href="#图论" class="headerlink" title="图论"></a>图论</h1><h2 id="优先队列优化Dijkstra"><a href="#优先队列优化Dijkstra" class="headerlink" title="优先队列优化Dijkstra"></a>优先队列优化Dijkstra</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#define LINF 1ll&lt;&lt;60
 const int MAXN = 2e5+10;
 typedef pair&lt;int,ll&gt; pli;
@@ -2992,7 +3026,7 @@ int main(){
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">43.7k</span>
+                        class="white-color">44.7k</span>
             
             
             
