@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>关于反悔贪心</title>
+      <link href="2021/07/21/fanhui-greedy/"/>
+      <url>2021/07/21/fanhui-greedy/</url>
+      
+        <content type="html"><![CDATA[<h1 id="反悔贪心"><a href="#反悔贪心" class="headerlink" title="反悔贪心"></a>反悔贪心</h1><h2 id="学习的帖子"><a href="#学习的帖子" class="headerlink" title="学习的帖子"></a>学习的帖子</h2><p><a href="https://www.cnblogs.com/amagaisite/p/13537905.html">反悔贪心 学习笔记 - SyadouHayami - 博客园 (cnblogs.com)</a></p><p>[题解 P3620 【<a href="https://www.luogu.com.cn/blog/zhouzhuo/solution-p3620">APIO/CTSC 2007]数据备份】 - 野心qwq 的博客 - 洛谷博客 (luogu.com.cn)</a></p><h2 id="写的第一个例题："><a href="#写的第一个例题：" class="headerlink" title="写的第一个例题："></a>写的第一个例题：</h2><p>[P3620 <a href="https://www.luogu.com.cn/problem/P3620">APIO/CTSC 2007]数据备份 - 洛谷 | 计算机科学教育新生态 (luogu.com.cn)</a></p><h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>转换后的题目是：给长度为n-1的序列，不能选择相邻的两个元素，问选择k个元素的最小和。</p><p>普通的贪心是，把所有的元素从大到小排列，每次选择最小的元素，并且把它相邻的两个元素打上删除标记表示不能选择。但是显然这样不带反悔的贪心是不行的。</p><p>比如对于n=4,k=2的序列2 1 2 9，按照这个贪心来做，会先选到1，并且删除了两个2，之后就只能选择9了，这样显然不是最优解。</p><p><strong>”考虑一个反悔的过程，我们需要构造一个方法去消掉之前的贡献转而加为正确的更优的贡献。”</strong></p><p>也就是说，我们需要把一个能够消除掉之前选择的影响的点推入这个排序中，和其他普通的贪心选项一起比较，每次选择其中最优的。(由于要动态维护这个顺序，所以用堆/优先队列实现)</p><p>在这题里，当选择了位置i的元素$da_i$,则$da_{i-1}$和$da_{i+1}$是不能选择的，但是最优解依旧有可能包含着两个元素，故我们构造一个新的点加入排序，这个点的点权就是：$da_{i-1}+da_{i+1}-da_i$,仔细想想，就是消去了之前选择$da_i$的贡献，并且加上了这个新的选择的贡献。</p><ul><li>关于为什么是$da_{i-1}$和$da_{i+1}$一起，而不可能是单独选择其中的一个？</li></ul><p>因为显然对于这种情况，在优先队列中$da_i$比$da_{i-1}$和$da_{i+1}$更早出现，故$da_{i-1}$和$da_{i+1}$都要比$da_i$小，所以显然着两个要选也是一起选，而不会只选其中一个就把之前的选择$da_i$反悔掉。</p><p>在选择了这个代表$da_{i-1}$和$da_{i+1}$的点后，同理也要推入代表$da_{i-1}$和$da_{i+1}$的点。</p><h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><p>通过双向链表实现了对点的删去，在选择了$da_i$之后，我们把$da_{i-1}+da_{i+1}-da_i$的值存在了原先$da_i$的位置，并且删去了$da_{i-1}$和$da_{i+1}$两个点，并且把反悔新点推入优先队列。</p><pre class="line-numbers language-none"><code class="language-none">2 1 2 9<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><p>两个2被删去，并且把反悔点的贡献存在了原先选择的1的位置：</p><pre class="line-numbers language-none"><code class="language-none">(2) 3 (2) 9<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><p>这时候$da_i$左右分别和$da_{i-2}$和$da_{i+2}$相连，如果我们之后发现$da_{i-2}$和$da_{i+2}$要比$da_{i-1}$和$da_{i+1}$更优，同样是删去$da_i$左右两侧的两个点，并且把这两个点减去$da_i$的值存入$da_i$，以此类推。</p><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include&lt;iostream&gt;#include&lt;queue&gt;using namespace std;const int MAXN = 114514;#define INF 0x3f3f3f3f#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)int da[MAXN],l[MAXN],r[MAXN];//双向连表bool del[MAXN];inline void del_lr(int pos){//删除其左右的元素    del[l[pos]] = del[r[pos]] = 1;//打上删除    da[pos] = da[l[pos]]+da[r[pos]]-da[pos];    //双向链表删点    l[pos]=l[l[pos]],r[pos]=r[r[pos]];    l[r[pos]]=pos,r[l[pos]]=pos;//一开始忘了这句即另一边也要接到pos上来}//关于为什么是双向链表：//如果是4 2 1 2 4，选择了1之后,2 2无法选择从链表中删除变成4 3 4,3代表1左右两边的2//这时候选择3就代表选择了两个2而放弃了1，而选了这两个2就不能选4,3和两个4在链表上也是相邻的int a[MAXN];int n,k;struct Node{    int val,pos;//数值和编号    bool operator &lt; (Node rhs)const{//优先队列要加const        return val&gt;rhs.val;    }};priority_queue&lt;Node&gt; q;void solve(){    cin&gt;&gt;n&gt;&gt;k;    rep(i,1,n) cin&gt;&gt;a[i];    rep(i,1,n-1){        da[i] = a[i+1]-a[i];//相邻做差存入双向链表        l[i] = i-1,r[i] = i+1;        q.push(Node{da[i],i});    }    da[0]=da[n]=INF;//保证了链表两端不会被修改(数值很大一定在堆的尾部)    Node now;    int res = 0;//记录结果    rep(i,1,k){//选择k条线缆        while(del[q.top().pos]) q.pop();//已经被删掉的点还在优先队列里        now = q.top();        q.pop();        res += now.val;//res += da[now.pos]也行        del_lr(now.pos);//删掉左右两边        q.push(Node{da[now.pos],now.pos});//这时候的da[pos]已经是修改过的了    }    cout&lt;&lt;res&lt;&lt;endl;}int main(){    //freopen("P3620_2.in","r",stdin);    solve();}//反悔贪心例题//P3620 [APIO/CTSC 2007]数据备份//https://www.luogu.com.cn/problem/P3620<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> ACM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 贪心 </tag>
+            
+            <tag> 算法学习笔记 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>多校补题记录</title>
       <link href="2021/07/20/duoxiao/"/>
       <url>2021/07/20/duoxiao/</url>

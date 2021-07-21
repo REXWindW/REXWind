@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="模板整理--图论(持续更新), REXWind&#39;s Blog">
+    <meta name="keywords" content="关于反悔贪心, REXWind&#39;s Blog">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>模板整理--图论(持续更新) | REXWind&#39;s Blog</title>
+    <title>关于反悔贪心 | REXWind&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -325,12 +325,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/img/erciyuan/mila2.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/img/erciyuan/blhx.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">模板整理--图论(持续更新)</h1>
+                    <h1 class="description center-align post-title">关于反悔贪心</h1>
                 </div>
             </div>
         </div>
@@ -446,12 +446,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E5%9B%BE%E8%AE%BA/">
-                                <span class="chip bg-color">图论</span>
+                            <a href="/tags/%E8%B4%AA%E5%BF%83/">
+                                <span class="chip bg-color">贪心</span>
                             </a>
                         
-                            <a href="/tags/ACM%E6%A8%A1%E6%9D%BF/">
-                                <span class="chip bg-color">ACM模板</span>
+                            <a href="/tags/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+                                <span class="chip bg-color">算法学习笔记</span>
                             </a>
                         
                     </div>
@@ -475,7 +475,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-12-13
+                    2021-07-21
                 </div>
                 
 
@@ -484,14 +484,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.2k
+                    1.2k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    11 分
+                    5 分
                 </div>
                 
 
@@ -514,331 +514,84 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="网络流相关"><a href="#网络流相关" class="headerlink" title="网络流相关"></a>网络流相关</h2><h3 id="SFPA"><a href="#SFPA" class="headerlink" title="SFPA"></a>SFPA</h3><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include&lt;iostream&gt;
+                <h1 id="反悔贪心"><a href="#反悔贪心" class="headerlink" title="反悔贪心"></a>反悔贪心</h1><h2 id="学习的帖子"><a href="#学习的帖子" class="headerlink" title="学习的帖子"></a>学习的帖子</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/amagaisite/p/13537905.html">反悔贪心 学习笔记 - SyadouHayami - 博客园 (cnblogs.com)</a></p>
+<p>[题解 P3620 【<a target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/zhouzhuo/solution-p3620">APIO/CTSC 2007]数据备份】 - 野心qwq 的博客 - 洛谷博客 (luogu.com.cn)</a></p>
+<h2 id="写的第一个例题："><a href="#写的第一个例题：" class="headerlink" title="写的第一个例题："></a>写的第一个例题：</h2><p>[P3620 <a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3620">APIO/CTSC 2007]数据备份 - 洛谷 | 计算机科学教育新生态 (luogu.com.cn)</a></p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>转换后的题目是：给长度为n-1的序列，不能选择相邻的两个元素，问选择k个元素的最小和。</p>
+<p>普通的贪心是，把所有的元素从大到小排列，每次选择最小的元素，并且把它相邻的两个元素打上删除标记表示不能选择。但是显然这样不带反悔的贪心是不行的。</p>
+<p>比如对于n=4,k=2的序列2 1 2 9，按照这个贪心来做，会先选到1，并且删除了两个2，之后就只能选择9了，这样显然不是最优解。</p>
+<p><strong>”考虑一个反悔的过程，我们需要构造一个方法去消掉之前的贡献转而加为正确的更优的贡献。”</strong></p>
+<p>也就是说，我们需要把一个能够消除掉之前选择的影响的点推入这个排序中，和其他普通的贪心选项一起比较，每次选择其中最优的。(由于要动态维护这个顺序，所以用堆/优先队列实现)</p>
+<p>在这题里，当选择了位置i的元素$da_i$,则$da_{i-1}$和$da_{i+1}$是不能选择的，但是最优解依旧有可能包含着两个元素，故我们构造一个新的点加入排序，这个点的点权就是：$da_{i-1}+da_{i+1}-da_i$,仔细想想，就是消去了之前选择$da_i$的贡献，并且加上了这个新的选择的贡献。</p>
+<ul>
+<li>关于为什么是$da_{i-1}$和$da_{i+1}$一起，而不可能是单独选择其中的一个？</li>
+</ul>
+<p>因为显然对于这种情况，在优先队列中$da_i$比$da_{i-1}$和$da_{i+1}$更早出现，故$da_{i-1}$和$da_{i+1}$都要比$da_i$小，所以显然着两个要选也是一起选，而不会只选其中一个就把之前的选择$da_i$反悔掉。</p>
+<p>在选择了这个代表$da_{i-1}$和$da_{i+1}$的点后，同理也要推入代表$da_{i-1}$和$da_{i+1}$的点。</p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><p>通过双向链表实现了对点的删去，在选择了$da_i$之后，我们把$da_{i-1}+da_{i+1}-da_i$的值存在了原先$da_i$的位置，并且删去了$da_{i-1}$和$da_{i+1}$两个点，并且把反悔新点推入优先队列。</p>
+<pre class="line-numbers language-none"><code class="language-none">2 1 2 9<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>两个2被删去，并且把反悔点的贡献存在了原先选择的1的位置：</p>
+<pre class="line-numbers language-none"><code class="language-none">(2) 3 (2) 9<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>这时候$da_i$左右分别和$da_{i-2}$和$da_{i+2}$相连，如果我们之后发现$da_{i-2}$和$da_{i+2}$要比$da_{i-1}$和$da_{i+1}$更优，同样是删去$da_i$左右两侧的两个点，并且把这两个点减去$da_i$的值存入$da_i$，以此类推。</p>
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include&lt;iostream&gt;
 #include&lt;queue&gt;
-#include&lt;vector&gt;
 using namespace std;
-#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
-#define ll long long
 const int MAXN = 114514;
-const int MAXM = 514514;
-const ll LINF = 1ll&lt;&lt;61;
-//前向星
-struct Edge{
-    int to,w,nxt;
-}edges[MAXM];
-int head[MAXN];
-int n,m,s;
-int cnt;
-inline void add_edge(int u,int v,int w){
-    edges[cnt].to = v;
-    edges[cnt].w = w;
-    edges[cnt].nxt = head[u];
-    head[u] = cnt++;
-}
-//SPFA
-queue&lt;int&gt; q;
-ll dis[MAXN];//每个点当前最小距离
-bool vis[MAXN];//记录队列中是否有该点
-inline void init(){//初始化前向星和SPFA的dis数组
-    rep(i,1,n) dis[i]=LINF,head[i]=-1;
-    cnt = 0;
-}
-inline void solve(){
-    cin&gt;&gt;n&gt;&gt;m&gt;&gt;s;
-    init();//记得要初始化
-    int u,v,w;
-    rep(i,1,m){
-        cin&gt;&gt;u&gt;&gt;v&gt;&gt;w;
-        add_edge(u,v,w);
-    }
-    dis[s] = 0;
-    q.push(s);
-    int now;
-    while(!q.empty()){
-        now = q.front();
-        q.pop();
-        vis[now] = 0;//vis表示队中有无该点
-        //每次取出队首,并检查关联点是否可以进行松弛操作
-        for(int i=head[now];i!=-1;i=edges[i].nxt){
-            v = edges[i].to;
-            if(dis[v]&gt;dis[now]+edges[i].w){//松弛操作
-                dis[v] = dis[now]+edges[i].w;
-                if(!vis[v]){//如果队列中没有点v,则将v入队
-                    vis[v] = 1;
-                    q.push(v);
-                }
-            }
-        }
-    }
-    rep(i,1,n) cout&lt;&lt;dis[i]&lt;&lt;' ';
-    //我这里还没有对到达不了的特殊情况进行处理
-    cout&lt;&lt;endl;
-}
-int main(){
-    solve();
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h3 id="费用流-SPFA找最短增广路"><a href="#费用流-SPFA找最短增广路" class="headerlink" title="费用流-SPFA找最短增广路"></a>费用流-SPFA找最短增广路</h3><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include&lt;iostream&gt;
-using namespace std;
-#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
-#define INF 0x7fffffff
-const int N = 5e3+5;
-const int M = 114514;//因为是双向边,要记得开两倍大的数组!
-int n;
-//前向星存图
-int t=1;//总边数
-int u[M],v[M],c[M],co[M],nxt[M],head[M];
-inline void add_edge(int x,int y,int z,int zo){//起点终点流量费用
-    u[++t]=x;v[t]=y;//正向边
-    c[t]=z;co[t]=zo;
-    nxt[t]=head[x];head[x]=t;
-    u[++t]=y;v[t]=x;//反向边
-    c[t]=0;co[t]=-zo;
-    nxt[t]=head[y];head[y]=t;
-}
-//SPFA
-int S,T;
-int q[M],l,r;//双端队列
-int dis[N];
-bool in[N];//在不在queue中
-int f[N];//记录路径
-inline bool spfa(){
-    rep(i,1,n) in[i]=0,dis[i]=INF;//初始化
-    dis[S]=0;in[S]=1;
-    l=r=M&gt;&gt;1;q[l]=S;//手写队列
-    while(l&lt;=r){
-        int now=q[l++];//取队首
-        if(now==T) continue;
-        for(int i=head[now];i;i=nxt[i])
-            if(c[i]&amp;&amp;dis[now]+co[i]&lt;dis[v[i]]){//费用更小的路
-                dis[v[i]]=dis[now]+co[i];
-                f[v[i]]=i;//记录路径!增广路经过哪些边
-                if(!in[v[i]]){//如果队中没有则入队
-                    in[v[i]]=1;
-                    if(dis[v[i]]&lt;dis[q[l]])q[--l]=v[i];else q[++r]=v[i];
-                    //双端队列优化spfa
-                }
-            }
-        in[now]=0;
-    }
-    return dis[T]&lt;INF;//是否找到增广路
-}
-int i,tmp;
-inline void costflow(){
-    int ans=0,flow=0;//最小费用,最大流
-    while(spfa()){
-        //从终点根据记录的f找到增广路
-        for(tmp=INF,i=T;i!=S;i=u[f[i]]) if(tmp&gt;c[f[i]]) tmp=c[f[i]];
-        //求这一次流多少(所有边剩余流量中最小值)
-        for(ans+=dis[i=T]*tmp;i!=S;i=u[f[i]]) c[f[i]]-=tmp,c[f[i]^1]+=tmp;
-        //减去流量并加在反向边上,并且计算费用
-        flow+=tmp;
-    }
-    printf("%d %d\n",flow,ans);
-}
-int main(){
-    int m;
-    scanf("%d%d%d%d",&amp;n,&amp;m,&amp;S,&amp;T);
-    int u,v,z,zo;
-    while(m--){
-        scanf("%d%d%d%d",&amp;u,&amp;v,&amp;z,&amp;zo);
-        add_edge(u,v,z,zo);
-    }
-    costflow();
-}
-//参考claris费用流板子
-//洛谷P3381
-//https://www.luogu.com.cn/problem/P3381<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-
-
-<h2 id="连通性相关"><a href="#连通性相关" class="headerlink" title="连通性相关"></a>连通性相关</h2><h3 id="Tarjan求强连通分量"><a href="#Tarjan求强连通分量" class="headerlink" title="Tarjan求强连通分量"></a>Tarjan求强连通分量</h3><p>可以用于有向图问题的缩点。</p>
-<p>$dfn[u]$记录当前节点u是第几个访问到的；</p>
-<p>$low[u]$定义为$Subtree(u)$中$dfn(u)$最小的，或者$Subtree(u)$中的点通过**非树边(不在子树上的边)**（返祖边或者比$rt$还高的边？）$low[u]$初始值定u，如果通过边连到$rt$之上的点可更新，又递归通过儿子$low[v]$来更新。</p>
-<p>连通图中有且仅有一个$dfn[u]=low[u]$,这个点是根节点。通过一个栈按照dfs的顺序入栈，回溯的时候判断如果一个点的$dfn[u]=low[u]$，则从这个点到栈顶的所有节点归入一个强连通分量。</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include&lt;iostream&gt;
-#include&lt;cstring&gt;
-#include&lt;cstdio&gt;
-#include&lt;algorithm&gt;
-#include&lt;vector&gt;
-#include&lt;map&gt;
-#include&lt;queue&gt;
-#include&lt;cmath&gt;
-using namespace std;
-
-template&lt;class T&gt;inline void read(T &amp;x){x=0;char o,f=1;while(o=getchar(),o&lt;48)if(o==45)f=-f;do x=(x&lt;&lt;3)+(x&lt;&lt;1)+(o^48);while(o=getchar(),o&gt;47);x*=f;}
-int cansel_sync=(ios::sync_with_stdio(0),cin.tie(0),0);
-#define ll long long
-#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
-#define repb(i,a,b) for(int i=(a);i&gt;=b;i--)
 #define INF 0x3f3f3f3f
-#define cendl printf("\n")
-ll gcd(ll a,ll b){ while(b^=a^=b^=a%=b); return a; }
-//#define INF 0x7fffffff
-
-const int MAXN = 2e6+5;
-
-int n;
-vector&lt;int&gt; e[MAXN];//存图 
-int dfn[MAXN],low[MAXN];
-int dfncnt;//dfn自增下标 
-int s[MAXN],tp;//数组模拟栈,tp记录大小 
-bool in[MAXN];//记录该点是否在栈中 
-int scc[MAXN],sc;//节点i所在scc的编号,sc记录有几个强连通 
-int sz[MAXN];//强连通i的大小 
-int indg[MAXN];//记录缩点后的入度（这题才有的 
-
-void tarjan(int u){
-	low[u]=dfn[u]=++dfncnt;//low初始值为自身dfn
-	s[++tp]=u;//推u入栈，从1开始 
-	in[u]=1;//记录u点在栈中 
-	for(auto v:e[u]){//访问到新点的情况 
-		if(!dfn[v]){
-			tarjan(v);
-			low[u] = min(low[u],low[v]);//用low[v}更新low[u] 
-		}
-		else if(in[v])//v被访问过，但是在栈中 
-			low[u] = min(low[u],dfn[v]);
-	}
-	if(dfn[u]==low[u]){//u是连通分量的根节点
-		sc++;//强连通数量++
-		sz[sc] = 0; 
-		while(s[tp]!=u){//u和u之后的点全部出栈 
-			scc[s[tp]] = sc;//这个点包含于第几个强连通
-			sz[sc]++;//u为根的这个强连通的大小 
-			in[s[tp]] = 0;//出栈 
-			tp--; 
-		}
-		scc[u] = sc;//给根节点标，属于第sc个强连通 
-		sz[sc]++;
-		in[u] = 0;
-		tp--;
-	}
-} 
-
-void reset(){
-	tp = sc = dfncnt =0;
-	rep(i,1,n){
-		in[i] = dfn[i] = 0;//low不用清空，sz在之后用到再清空 
-		e[i].clear();
-	}
-}
-
-int main(){
-	cin&gt;&gt;n;
-	reset();
-	int v;
-	rep(u,1,n){
-		while(cin&gt;&gt;v&amp;&amp;v!=0) e[u].push_back(v);
-	} 
-	rep(u,1,n)
-		if(!dfn[u]) tarjan(u);
-	rep(i,1,sc) indg[i] = 0;//这个不包含在tarjan里面，是这题记录入度的 
-	rep(u,1,n){
-		for(auto v:e[u]){
-			if(scc[u]!=scc[v]) indg[scc[v]]++;
-		}
-	}
-	int res = 0;
-	rep(i,1,sc){
-		if(indg[i]==0) res++;
-	}
-	cout&lt;&lt;res&lt;&lt;endl;
-}
-//洛谷P2835 刻录光盘 https://www.luogu.com.cn/problem/P2835#submit<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h3 id="Tarjan求割点"><a href="#Tarjan求割点" class="headerlink" title="Tarjan求割点"></a>Tarjan求割点</h3><p>定义：去掉这个点，连通分量数量+1</p>
-<p>无向图的$low[u]$在这里表述成：点$u$在<strong>不经过其父亲的情况下能达到的最小时间戳/过一条非树边达到的最小时间戳</strong>(最小的$dfn$)</p>
-<p>对于某个顶点$u$，如果$u$的儿子$v$中，存在至少一个$low[v]\ge dfn[u]$，即v子树中无法回到祖先（即最高也只能回到父亲u），则u是割点。</p>
-<p>如果是$dfn[u]=1$即祖先的点，满足儿子数量$\ge 2$即可。</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include&lt;iostream&gt;
-#include&lt;vector&gt;
-#include&lt;algorithm&gt;
 #define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
-using namespace std;
-const int MAXN = 114514;
-int n,m;
-vector&lt;int&gt;e[MAXN];
-bool vis[MAXN];
-bool flag[MAXN];//标记割点
-int res;//记录割点数量
-int low[MAXN],dfn[MAXN],dfncnt;//老tarjan了
 
-void Tarjan(int u,int pre){//pre=-1时代表是祖先
-    vis[u] = 1;
-    low[u] = dfn[u] = ++dfncnt;
-    int cntchild=0;//儿子数量
-    for(auto v:e[u]){
-        if(!vis[v]){
-            cntchild++;
-            Tarjan(v,u);
-            low[u] = min(low[u],low[v]);
-            if(pre!=-1&amp;&amp;low[v]&gt;=dfn[u]&amp;&amp;!flag[u]){//算法核心
-                flag[u]=1;
-                res++;
-            }
-        }
-        else if(v!=pre)//往上的边,更新当前节点的low
-            low[u] = min(low[u],dfn[v]);
-    }
-    if(pre==-1&amp;&amp;cntchild&gt;=2&amp;&amp;!flag[u]){//u为祖先要另外讨论
-        flag[u]=1;
-        res++;
-    }
+int da[MAXN],l[MAXN],r[MAXN];//双向连表
+bool del[MAXN];
+inline void del_lr(int pos){//删除其左右的元素
+    del[l[pos]] = del[r[pos]] = 1;//打上删除
+    da[pos] = da[l[pos]]+da[r[pos]]-da[pos];
+    //双向链表删点
+    l[pos]=l[l[pos]],r[pos]=r[r[pos]];
+    l[r[pos]]=pos,r[l[pos]]=pos;//一开始忘了这句即另一边也要接到pos上来
 }
+//关于为什么是双向链表：
+//如果是4 2 1 2 4，选择了1之后,2 2无法选择从链表中删除变成4 3 4,3代表1左右两边的2
+//这时候选择3就代表选择了两个2而放弃了1，而选了这两个2就不能选4,3和两个4在链表上也是相邻的
+int a[MAXN];
+int n,k;
+struct Node{
+    int val,pos;//数值和编号
+    bool operator &lt; (Node rhs)const{//优先队列要加const
+        return val&gt;rhs.val;
+    }
+};
+priority_queue&lt;Node&gt; q;
 
 void solve(){
-    cin&gt;&gt;n&gt;&gt;m;
-    //初始化
-    rep(i,1,n){vis[i]=flag[i]=0;e[i].clear();}
-    res=dfncnt=0;
-    int u,v;
-    rep(i,1,m){
-        cin&gt;&gt;u&gt;&gt;v;
-        e[u].push_back(v);
-        e[v].push_back(u);
+    cin&gt;&gt;n&gt;&gt;k;
+    rep(i,1,n) cin&gt;&gt;a[i];
+    rep(i,1,n-1){
+        da[i] = a[i+1]-a[i];//相邻做差存入双向链表
+        l[i] = i-1,r[i] = i+1;
+        q.push(Node{da[i],i});
     }
-    rep(i,1,n) if(!vis[i]) Tarjan(i,-1);//也可在这重置dfncnt
+    da[0]=da[n]=INF;//保证了链表两端不会被修改(数值很大一定在堆的尾部)
+    Node now;
+    int res = 0;//记录结果
+    rep(i,1,k){//选择k条线缆
+        while(del[q.top().pos]) q.pop();//已经被删掉的点还在优先队列里
+        now = q.top();
+        q.pop();
+        res += now.val;//res += da[now.pos]也行
+        del_lr(now.pos);//删掉左右两边
+        q.push(Node{da[now.pos],now.pos});//这时候的da[pos]已经是修改过的了
+    }
     cout&lt;&lt;res&lt;&lt;endl;
-    rep(i,1,n){
-        if(flag[i]) cout&lt;&lt;i&lt;&lt;' ';
-    }
-    cout&lt;&lt;endl;
 }
 int main(){
+    //freopen("P3620_2.in","r",stdin);
     solve();
 }
-//P3388 【模板】割点（割顶）
-//https://www.luogu.com.cn/problem/P3388<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h3 id="Tarjan求桥-割边"><a href="#Tarjan求桥-割边" class="headerlink" title="Tarjan求桥(割边)"></a>Tarjan求桥(割边)</h3><p>类似求割点，和割点差不多，只要改一处：$low[v]&gt;dfn[u]$ 就可以了，因为从”&gt;=”变成了”=”，所以不需要考虑祖先节点的问题。</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int low[MAXN], dfn[MAXN], iscut[MAXN], dfs_clock;
-bool isbridge[MAXN];
-vector&lt;int&gt; G[MAXN];
-int cnt_bridge;
-int father[MAXN];
-
-void tarjan(int u, int fa) {
-    father[u] = fa;
-    low[u] = dfn[u] = ++dfs_clock;
-    for (int i = 0; i &lt; G[u].size(); i++) {
-        int v = G[u][i];
-        if (!dfn[v]) {
-            tarjan(v, u);
-            low[u] = min(low[u], low[v]);
-            if (low[v] &gt; dfn[u]) {//算法核心
-                isbridge[v] = true;
-                ++cnt_bridge;
-            }
-        } 
-        else if (dfn[v] &lt; dfn[u] &amp;&amp; v != fa) {
-            low[u] = min(low[u], dfn[v]);
-        }
-    }
-}
-//摘自OIWIKI
-//https://oi-wiki.org/graph/cut/<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+//反悔贪心例题
+//P3620 [APIO/CTSC 2007]数据备份
+//https://www.luogu.com.cn/problem/P3620<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
                 
@@ -866,7 +619,7 @@ void tarjan(int u, int fa) {
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2020/12/13/graph/">http://example.com/2020/12/13/graph/</a>
+                    <a href="http://example.com/2021/07/21/fanhui-greedy/">http://example.com/2021/07/21/fanhui-greedy/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -904,12 +657,12 @@ void tarjan(int u, int fa) {
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E5%9B%BE%E8%AE%BA/">
-                                    <span class="chip bg-color">图论</span>
+                                <a href="/tags/%E8%B4%AA%E5%BF%83/">
+                                    <span class="chip bg-color">贪心</span>
                                 </a>
                             
-                                <a href="/tags/ACM%E6%A8%A1%E6%9D%BF/">
-                                    <span class="chip bg-color">ACM模板</span>
+                                <a href="/tags/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+                                    <span class="chip bg-color">算法学习笔记</span>
                                 </a>
                             
                         </div>
@@ -1080,7 +833,7 @@ void tarjan(int u, int fa) {
         repo: 'REXWindW.github.io',
         owner: 'REXWindW',
         admin: "REXWindW",
-        id: '2020-12-13T15-33-45',
+        id: '2021-07-21T20-59-54',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -1108,28 +861,82 @@ void tarjan(int u, int fa) {
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2020/12/14/cf-686-f/">
+                <a href="/2021/07/21/fanhui-greedy/">
                     <div class="card-image">
                         
-                        <img src="/img/erciyuan/mila3.jpg" class="responsive-img" alt="Codeforces Round /#686 (Div. 3) F. Array Partition(ST,二分)">
+                        <img src="/img/erciyuan/blhx.jpg" class="responsive-img" alt="关于反悔贪心">
                         
-                        <span class="card-title">Codeforces Round /#686 (Div. 3) F. Array Partition(ST,二分)</span>
+                        <span class="card-title">关于反悔贪心</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            二分的时候分情况讨论，并不是简单的依据mid的值进行二分，而是通过区间查询比较
+                            两天一个算法!
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-12-14
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-07-21
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/ACM/" class="post-category">
+                                    ACM
+                                </a>
+                            
+                            
                         </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E8%B4%AA%E5%BF%83/">
+                        <span class="chip bg-color">贪心</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+                        <span class="chip bg-color">算法学习笔记</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/07/20/duoxiao/">
+                    <div class="card-image">
+                        
+                        <img src="/img/erciyuan/lanchuyin.png" class="responsive-img" alt="多校补题记录">
+                        
+                        <span class="card-title">多校补题记录</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            2021杭电牛客多校补题记录
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-07-20
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -1149,68 +956,8 @@ void tarjan(int u, int fa) {
                         <span class="chip bg-color">题解</span>
                     </a>
                     
-                    <a href="/tags/Codeforces/">
-                        <span class="chip bg-color">Codeforces</span>
-                    </a>
-                    
-                    <a href="/tags/%E4%BA%8C%E5%88%86/">
-                        <span class="chip bg-color">二分</span>
-                    </a>
-                    
-                    <a href="/tags/ST/">
-                        <span class="chip bg-color">ST</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2020/11/29/data-structure/">
-                    <div class="card-image">
-                        
-                        <img src="/img/erciyuan/mila1.jpg" class="responsive-img" alt="模板整理--数据结构(持续更新)">
-                        
-                        <span class="card-title">模板整理--数据结构(持续更新)</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            ACM数据结构模板整理
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-11-29
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/ACM/" class="post-category">
-                                    ACM
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/ACM%E6%A8%A1%E6%9D%BF/">
-                        <span class="chip bg-color">ACM模板</span>
-                    </a>
-                    
-                    <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
-                        <span class="chip bg-color">数据结构</span>
+                    <a href="/tags/%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/">
+                        <span class="chip bg-color">做题记录</span>
                     </a>
                     
                 </div>
