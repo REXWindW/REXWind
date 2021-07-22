@@ -484,14 +484,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.2k
+                    3.4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    9 分
+                    15 分
                 </div>
                 
 
@@ -672,8 +672,8 @@ signed main(){
 
 
 <h2 id="写的第三个例题："><a href="#写的第三个例题：" class="headerlink" title="写的第三个例题："></a>写的第三个例题：</h2><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/CF436E">CF436E Cardboard Box - 洛谷 | 计算机科学教育新生态 (luogu.com.cn)</a></p>
-<h3 id="分析-2"><a href="#分析-2" class="headerlink" title="分析"></a>分析</h3><p>题意：给n个关卡，要获得w颗星，每个关卡可以支付$a_i$获得1颗星，支付$b_i$获得两颗星，问得到w颗星的最小费用。</p>
-<p>我先写了一个假的后悔贪心：即选择了$a_i$之后$a_i-b_i$推入堆中，代表反悔第i关选择1个的操作，改成了选2个。</p>
+<h3 id="分析-2"><a href="#分析-2" class="headerlink" title="分析"></a>分析</h3><p>题意：给n个关卡，要获得w颗星，每个关卡可以支付$a_i$获得1颗星，支付$b_i$获得两颗星，问得到w颗星的最小费用。要求输出选择。</p>
+<h4 id="一个假贪心"><a href="#一个假贪心" class="headerlink" title="一个假贪心"></a>一个假贪心</h4><p>我先写了一个假的后悔贪心：即选择了$a_i$之后$a_i-b_i$推入堆中，代表反悔第i关选择1个的操作，改成了选2个。</p>
 <pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">//假的反悔贪心
 const int MAXN = 114514&lt;&lt;2;
 int n,w;
@@ -709,7 +709,157 @@ int main(){
 }<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p><strong>这个贪心的问题在于：有些关是一个点非常不划算，两个点非常划算的情况，导致$a_i$根本没机会被选，这样$b_i-a_i$根本没机会加入队列。</strong></p>
-<p>正解待补///   ///</p>
+<h4 id="正解"><a href="#正解" class="headerlink" title="正解"></a>正解</h4><p>首先，根据之前的假算法，我们需要考虑从0星直接变成2星的情况，但是这种情况，选择的星星数量会直接+2，而普通的情况是+1，这样不能进行比较。因此，我们在<strong>0星变成2星的时候，同时也要让一个已经做的选择-1</strong>，即”i从0星变2星，j从1星反悔成0星“和”i从0星变2星，j从2星反悔成1星“这两种情况。</p>
+<p><strong>讨论贪心情况对答案的贡献：</strong></p>
+<ul>
+<li>i从0星变1星：$a_i$</li>
+<li>i从1星变2星：$b_i-a_i$</li>
+</ul>
+<p>本来可以只用一条队列维护，但由于后面的反悔选项，因此也需要两条队列，原因一会儿会讲。</p>
+<p><strong>讨论两种反悔情况对答案的贡献：</strong></p>
+<ul>
+<li>i从0星变2星，j从1星反悔成0星：$b_j-a_i$</li>
+<li>i从0星变2星，j从2星反悔成1星：$b_j-(b_i-a_i)$</li>
+</ul>
+<p>要求得以上两种情况的最优解，需要维护：最小的$b_j$，最大的$a_i$和最大的$b_i-a_i$。需要用到三条队列。</p>
+<p><strong>为什么需要五条队列？：</strong></p>
+<p>有些关卡星值的修改会<strong>牵扯到两个堆</strong>，即一个关卡会被推入多个堆中，因此我们在取出了这个关卡的其中一个，并对它进行处理后，另一个堆中的这个关卡的点会变为无效点。我们用sel[i]记录第i关的选项，每次取堆顶之前，先与sel进行比较，把堆顶的无效点都去除（有点像单调队列）。如下：</p>
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">while(!q1.empty()&amp;&amp;sel[q1.top().sd]!=0) q1.pop();<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h4 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h4><ul>
+<li>我们在实现的时候，从5个堆中取出相应的堆顶元素，求出四种方案的解的贡献存进$op1,op2,op3,op4$，再进行比较，选择贡献最小的一个，并把对应的堆顶出栈，再推入更改后的元素。</li>
+</ul>
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">int minp = 1;
+rep(i,2,4)if(op[i]&lt;op[minp])minp=i;//找到4个op中的最优解
+res += op[minp];<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>更新关卡星数的操作会被重复用，因此可以用函数封装让其更直观，比如，贪心操作1和反悔操作2都会产生新的1星关，故可以用函数add1封装。</li>
+</ul>
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">inline void add0(int pos){
+    sel[pos] = 0;
+    q1.push(mkp(a[pos],pos));//0变1
+    q3.push(mkp(b[pos],pos));//0变2
+}
+inline void add1(int pos){
+    sel[pos] = 1;
+    q2.push(mkp(b[pos]-a[pos],pos));//1变2
+    q4.push(mkp(a[pos],pos));//1变0
+}
+inline void add2(int pos){
+    sel[pos] = 2;
+    q5.push(mkp(b[pos]-a[pos],pos));//2变1
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include&lt;iostream&gt;
+#include&lt;queue&gt;
+#include&lt;algorithm&gt;
+using namespace std;
+#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
+typedef pair&lt;int,int&gt; pii;
+#define ft first
+#define sd second
+#define mkp make_pair
+
+#define int long long
+#define INF 0x7fffffff
+const int MAXN = 114514&lt;&lt;2;
+int n,w;
+int a[MAXN],b[MAXN],sel[MAXN];
+//====贪心操作====
+//1.把0星变1星  2.把1星变2星
+//   ai         bi-ai(q2)
+//q1维护ai最小值，q2维护bi-ai最小值
+//====反悔操作====
+//3.把j的0星变2星,再把i的1星变0星  4.把j的0星变2星,再把i的2星变1星
+//    bj - ai                       bj - (bi-ai)
+//q3维护bj最小值，q4维护ai最大值，q5维护bi-ai最大值
+//这样一来便可以处理"1星特别不划算,2星特划算"的情况
+priority_queue&lt;pii,vector&lt;pii&gt;,greater&lt;pii&gt; &gt; q1,q2,q3;
+priority_queue&lt;pii&gt; q4,q5;
+inline void add0(int pos){
+    sel[pos] = 0;
+    q1.push(mkp(a[pos],pos));//0变1
+    q3.push(mkp(b[pos],pos));//0变2
+}
+inline void add1(int pos){
+    sel[pos] = 1;
+    q2.push(mkp(b[pos]-a[pos],pos));//1变2
+    q4.push(mkp(a[pos],pos));//1变0
+}
+inline void add2(int pos){
+    sel[pos] = 2;
+    q5.push(mkp(b[pos]-a[pos],pos));//2变1
+}
+inline void solve(){
+    cin&gt;&gt;n&gt;&gt;w;
+    int cost = 0;
+    rep(i,1,n){
+        cin&gt;&gt;a[i]&gt;&gt;b[i];
+        q1.push(mkp(a[i],i));
+        q3.push(mkp(b[i],i));
+    }
+    int op[6];
+    int res=0;
+    rep(i,1,w){//进行w次选择
+        op[1]=op[2]=op[3]=op[4]=INF;//四种操作的贡献,找最值
+        int pos1,pos2,pos3,pos4,pos5;//五个堆的下标暂存
+
+        while(!q1.empty()&amp;&amp;sel[q1.top().sd]!=0) q1.pop();
+        if(!q1.empty()){//0变1
+            pos1 = q1.top().sd;
+            op[1] = a[pos1];
+        }
+        while(!q2.empty()&amp;&amp;sel[q2.top().sd]!=1) q2.pop();
+        if(!q2.empty()){//1变2
+            pos2 = q2.top().sd;
+            op[2] = b[pos2]-a[pos2];
+        }
+        while(!q3.empty()&amp;&amp;sel[q3.top().sd]!=0) q3.pop();
+        while(!q4.empty()&amp;&amp;sel[q4.top().sd]!=1) q4.pop();
+        if(!q3.empty()&amp;&amp;!q4.empty()){//0变2,1变0
+            pos3 = q3.top().sd;pos4 = q4.top().sd;
+            op[3] = b[pos3]-a[pos4];
+        }
+        while(!q5.empty()&amp;&amp;sel[q5.top().sd]!=2) q5.pop();
+        if(!q3.empty()&amp;&amp;!q5.empty()){//0变2,2变1
+            pos3 = q3.top().sd;pos5 = q5.top().sd;
+            op[4] = b[pos3]-(b[pos5]-a[pos5]);
+        }
+
+        int minp = 1;
+        rep(i,2,4)if(op[i]&lt;op[minp])minp=i;//找到4个op中的最优解
+        res += op[minp];
+        if(minp==1){//1.把0星变1星
+            q1.pop();
+            add1(pos1);
+        }
+        else if(minp==2){//2.把1星变2星
+            q2.pop();
+            add2(pos2);
+        }
+        else if(minp==3){//3.把j的0星变2星,再把i的1星变0星
+            q3.pop(),q4.pop();
+            add2(pos3);
+            add0(pos4);
+        }
+        else if(minp==4){//4.把j的0星变2星,再把i的2星变1星
+            q3.pop(),q5.pop();
+            add2(pos3);
+            add1(pos5);
+        }
+    }
+    cout&lt;&lt;res&lt;&lt;endl;
+    rep(i,1,n) cout&lt;&lt;sel[i];
+    cout&lt;&lt;endl;
+}
+signed main(){
+    solve();
+}
+//反悔贪心例题
+//CF436E Cardboard Box
+//https://www.luogu.com.cn/problem/CF436E<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 
                 
             </div>
@@ -1232,7 +1382,7 @@ int main(){
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">47.9k</span>
+                        class="white-color">49.2k</span>
             
             
             
