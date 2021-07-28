@@ -488,14 +488,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.8k
+                    3.9k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    14 分
+                    19 分
                 </div>
                 
 
@@ -779,6 +779,118 @@ int main(){
 //洛谷P4173 残缺的字符串（带通配符的字符串匹配问题）
 //https://www.luogu.com.cn/problem/P4173
 //洛谷开O2才能过<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="杭电多校2021-3-1003-Forgiving-Matching"><a href="#杭电多校2021-3-1003-Forgiving-Matching" class="headerlink" title="杭电多校2021(3) 1003.Forgiving Matching"></a>杭电多校2021(3) 1003.Forgiving Matching</h2><p><a target="_blank" rel="noopener" href="https://acm.dingbacode.com/showproblem.php?pid=6975">Problem - 6975 (dingbacode.com)</a></p>
+<h3 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h3><p>时间给8s，n和m的总和1e6，每组n和m为1e5。给长为n的字符串B和长为m的字符串A。串中包含通配符*，可以匹配任何符号。</p>
+<p>定义一个原谅数k，即允许有k位失配，问对[0,m]的不同k，A有多少个连续子串与B匹配。</p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>这题其实比上面的题都简单。它对时间复杂度的要求很低。故可以分成0-9共10次FFT。</p>
+<ul>
+<li>分析题目，可以转化为：求位置x的子串$B[x-m-2,x]$与A的不匹配的数量$tmp$，加到差分数组$cf[m-tmp]$上去即可。</li>
+</ul>
+<p>我们维护10个数组$A[i][j]$，代表A串的j位置是否为数字i（*存在A[10]中）。</p>
+<ul>
+<li>我们定义匹配函数$C(i,j)=A_i\cdot B_i$，故全匹配函数为$P(x)=\sum C(i,x+i)$,同样通过反转后卷积来维护，卷积后的数组$G[i][j]$代表$A$和$B[j-m-2,j]$有多少个相同的位置(都是数字i)。</li>
+<li>通配符另外讨论，有<strong>匹配字符数 = 0-9匹配字符数 + A通配符数 + B子串通配符数 - AB位置重合通配符数量</strong></li>
+</ul>
+<p>A通配符数扫一遍可以得到，B子串通配符数通过前缀和得，AB位置重合的通配符数量，则和之前的其他字母一样，可以通过FFT维护后查询。</p>
+<h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+#include&lt;cmath&gt;
+using namespace std;
+
+int cansel_sync=(ios::sync_with_stdio(0),cin.tie(0),0);
+#define ll long long
+#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
+
+const int MAXN = 114514&lt;&lt;1;
+const double Pi=acos(-1.0);//FFT板子
+struct complex{
+    double x,y;
+    complex (double xx=0,double yy=0){x=xx,y=yy;}
+};
+complex operator + (complex a,complex b){ return complex(a.x+b.x , a.y+b.y);}
+complex operator - (complex a,complex b){ return complex(a.x-b.x , a.y-b.y);}
+complex operator * (complex a,complex b){ return complex(a.x*b.x-a.y*b.y , a.x*b.y+a.y*b.x);}//不懂的看复数的运算那部分 
+int l,r[MAXN&lt;&lt;2];
+int limit=1;
+void FFT(complex *A,int type){
+    for(int i=0;i&lt;limit;i++) 
+        if(i&lt;r[i]) swap(A[i],A[r[i]]);//求出要迭代的序列 
+    for(int mid=1;mid&lt;limit;mid&lt;&lt;=1){//待合并区间的中点
+        complex Wn( cos(Pi/mid) , type*sin(Pi/mid) ); //单位根 
+        for(int R=mid&lt;&lt;1,j=0;j&lt;limit;j+=R){//R是区间的右端点，j表示前已经到哪个位置了 
+            complex w(1,0);//幂 
+            for(int k=0;k&lt;mid;k++,w=w*Wn){//枚举左半部分 
+                 complex x=A[j+k],y=w*A[j+mid+k];//蝴蝶效应 
+                A[j+k]=x+y;
+                A[j+mid+k]=x-y;
+            }
+        }
+    }
+}//FFT板子
+string s1,s2;
+int n,m;
+inline int idx(char c){if(c=='*')return 10;return c-'0';}
+complex A[12][MAXN&lt;&lt;2],B[12][MAXN&lt;&lt;2];
+int cnt[MAXN];//记录数字相同位置数量
+int cnttp[MAXN];//通配符位置相同
+int sum1[MAXN],sum2;
+int cf[MAXN];//差分数组
+
+void solve(){
+    l=0;limit=1;
+    cin&gt;&gt;n&gt;&gt;m;
+    cin&gt;&gt;s1&gt;&gt;s2;
+    rep(i,0,m) cf[i]=0;//差分数组
+    while(limit&lt;=n+m-2) limit&lt;&lt;=1,l++;
+    rep(i,0,limit-1)
+        r[i]= ( r[i&gt;&gt;1]&gt;&gt;1 )| ( (i&amp;1)&lt;&lt;(l-1) );
+
+    rep(k,0,10){
+        rep(i,0,limit-1) A[k][i] = complex();
+        rep(i,0,limit-1) B[k][i] = complex();
+    }
+    rep(i,0,n-1){
+        B[idx(s1[i])][i]=complex(1);
+        cnt[i]=cnttp[i]=0;
+        if(i==0) sum1[i] = (s1[i]=='*');
+        else sum1[i]=sum1[i-1]+(s1[i]=='*');
+    }
+    sum2=0;
+    rep(i,0,m-1){
+        A[idx(s2[i])][i]=complex(1);
+        sum2 += (s2[i]=='*');
+    }
+    //cnt[x] = sigma A[i]*B[j] i+j=x
+    rep(i,0,10){//普通字符匹配的位置
+        reverse(A[i],A[i]+m);
+        FFT(A[i],1);FFT(B[i],1);
+        rep(j,0,limit-1) A[i][j] = A[i][j]*B[i][j];
+        FFT(A[i],-1);
+        if(i!=10) rep(j,m-1,n-1) cnt[j] += (int)(A[i][j].x/limit+0.5);
+        else rep(j,m-1,n-1) cnttp[j] += (int)(A[i][j].x/limit+0.5);
+    }
+    //匹配字符数 = cnt[j] + A通配 + B通配 - AB重合通配(FFT)
+    int tmp;
+    rep(i,m-1,n-1){
+        tmp = cnt[i] + sum2 + sum1[i] - cnttp[i];
+        if(i!=m-1) tmp -= sum1[i-m];//其实就是sum1[i]-sum1[i-m]，防止越界用
+        cf[m-tmp]++;//更新差分数组
+    }
+    int now = 0;
+    rep(i,0,m){
+        now += cf[i];
+        cout&lt;&lt;now&lt;&lt;endl;
+    }
+}  
+
+int main(){
+    int z;
+    cin&gt;&gt;z;
+    while(z--) solve();
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
                 
@@ -1310,7 +1422,7 @@ int main(){
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">52k</span>
+                        class="white-color">53k</span>
             
             
             
