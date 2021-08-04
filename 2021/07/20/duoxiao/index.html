@@ -514,7 +514,7 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="多校补题记录"><a href="#多校补题记录" class="headerlink" title="多校补题记录"></a>多校补题记录</h1><h3 id="n个区间分k组-使每组区间的并集长度之和最大"><a href="#n个区间分k组-使每组区间的并集长度之和最大" class="headerlink" title="n个区间分k组,使每组区间的并集长度之和最大"></a>n个区间分k组,使每组区间的并集长度之和最大</h3><p>牛客2-G-League of Legends 【单调队列优化DP】</p>
+                <h1 id="多校补题记录"><a href="#多校补题记录" class="headerlink" title="多校补题记录"></a>多校补题记录</h1><h2 id="n个区间分k组-使每组区间的并集长度之和最大"><a href="#n个区间分k组-使每组区间的并集长度之和最大" class="headerlink" title="n个区间分k组,使每组区间的并集长度之和最大"></a>n个区间分k组,使每组区间的并集长度之和最大</h2><p>牛客2-G-League of Legends 【单调队列优化DP】</p>
 <p><a target="_blank" rel="noopener" href="https://ac.nowcoder.com/acm/contest/11253/G">G-League of Legends_2021牛客暑期多校训练营2 (nowcoder.com)</a></p>
 <p>题意：给n,k(5000)，有n个成员要被分成k组，每组对答案的贡献为：所有组员空闲时间[ai,bi)的并集的长度。求最大的答案。</p>
 <p>解：把所有的线段分成两个集合，“大边”和“小边”，如果一个线段能够完整包含另一条线段，那这个边是“大边”，剩余的边为“小边”。</p>
@@ -608,18 +608,16 @@ int main(){
 }<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>注意单调队列实现的细节。一开始一直wa，因为是要满足$k&lt;j$的，所以只有在计算到$DP_{i,j}$时，才能把$DP_{i-1,j-1}+R_j$推进来。</p>
-<h3 id="把字符串分成两段，问有多少失配数-lt-k的子串"><a href="#把字符串分成两段，问有多少失配数-lt-k的子串" class="headerlink" title="把字符串分成两段，问有多少失配数<=k的子串"></a>把字符串分成两段，问有多少失配数&lt;=k的子串</h3><p>杭电多校5 Another String【滑动窗口，差分】</p>
+<h2 id="把字符串分成两段，问有多少失配数-lt-k的子串"><a href="#把字符串分成两段，问有多少失配数-lt-k的子串" class="headerlink" title="把字符串分成两段，问有多少失配数<=k的子串"></a>把字符串分成两段，问有多少失配数&lt;=k的子串</h2><p>杭电多校5 Another String【滑动窗口，差分】</p>
 <p><a target="_blank" rel="noopener" href="https://acm.hdu.edu.cn/showproblem.php?pid=7015">Problem - 7015 (hdu.edu.cn)</a></p>
 <p>题意：给一个长3000的串n，和允许最大失配数（距离）k，问对于每个分界点i，左右两侧有多少对距离小于等于k的子串。</p>
 <p>这个分界点$i$，题目定义的是左半边的最后一个字符，即左半边为$s[1,i]$右半边为$s[i+1,n]$。</p>
 <p>我写的时候定$i$为右半边的第一个字符，即左半边为$s[1,i-1]$,右半边为$s[i,n]$。</p>
 <p>解：第一层枚举两个滑动窗口的间距d，然后在里面用for循环枚举$l$，对于每个$l$，使$r$一直增加得到最大的且距离不超过$k$的子串。</p>
-<img src="./img/duoxiao/hd5.jpg" alt="hd5" style="zoom:10%;">
-
+<p><img src="/img/duoxiao/hd5.jpg" alt="hd5"></p>
 <p>如图，可以发现对于这一对匹配串，可以选择的分界点$i$从$4$到$6$，在结果上，对这一段的$res[4]$到$res[6]$，都要$+1$，可以用差分数组实现。</p>
 <p>但是这样只是讨论到“最长”的情况，对于每个l而言，不仅仅是这个最大的r可以使得串s[l,r]与串$s[d+l-1,d+r-1]$匹配，对于其他的$l\leq x\leq r$，显然对于串$s[l,x]$和$s[l+d-1,x+d-1]$也满足条件，故我们在图上标出这些满足条件的子串：</p>
-<img src="./img/duoxiao/hd5.2.jpg" alt="hd5.2" style="zoom:10%;">
-
+<p><img src="/img/duoxiao/hd5.2.jpg" alt="hd5.2"></p>
 <ul>
 <li>可以发现，这对串的结束点x从后往前移动，分别有长度为1，2，3的三对匹配串。长度为1的串’a’有符合条件的分界点$i\in [2,6]$，长度为2的串’ab’有符合条件的分界点$i\in [3,6]$，长度为3的串’abc’有符合条件的分界点$i\in[4,6]$。可以发现，对答案的贡献为一个<strong>梯型</strong>。</li>
 <li>我们用差分数组实现，要构造这样的梯形，需要在差分数组的cf[2,3,4]处+1，cf[7]处-3。但是对于这个梯形比较长的时候，修改差分数组的复杂度也变成了$O(n)$，故需要再造一个<strong>差分数组的差分数组</strong>cf2，原本的cf[2,3,4]+=1，可以变成cf[2]+=1，cf[5]-=1。</li>
