@@ -484,14 +484,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2k
+                    3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    9 分
+                    14 分
                 </div>
                 
 
@@ -677,6 +677,148 @@ int main(){
     cin&gt;&gt;z;
     while(z--) solve();
 }<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="图上选边，使两端点权-1，问最少步数"><a href="#图上选边，使两端点权-1，问最少步数" class="headerlink" title="图上选边，使两端点权-1，问最少步数"></a>图上选边，使两端点权-1，问最少步数</h2><p>牛客多校9 J-Jam</p>
+<p><a target="_blank" rel="noopener" href="https://ac.nowcoder.com/acm/contest/11260/J">J-Jam_2021牛客暑期多校训练营9 (nowcoder.com)</a></p>
+<p>题意：有十字路口，每个路口有三个方向，每个时间点的安排不能使两条路线交叉，问最少需要多少个时间可以让十字路口的车都走完。（每个路口每个方向的车Ci,j&lt;=100)</p>
+<p><img src="/img/duoxiao/shizi.png" alt="shizi"></p>
+<p>解：这题可以用带花树写，对每个车建点，之后跑图上的最大匹配。但是我们赛中写的是网络流。</p>
+<p>首先可以发现，每个路口向右走的车辆可以独立出来，因为向右走是不与其他方向冲突点。</p>
+<p>这样一来，可以把每方位的两种方向都拉出来，转变成了：”给定一张图，每次可以选择一条边，使得两端点权值各-1，问最少操作多少次使点权全部清空？”</p>
+<p><img src="/img/duoxiao/shizitu.jpg" alt="shizitu"></p>
+<p>即便建出来这样一张图，还是无法想到怎么做（可以把每个车子拆出来建图用带花树，这里先不讨论这种）。这张图也不是二分图，<strong>但是我们可以通过删去两条边使之变成一张二分图，并且着两条边可以100*100地取枚举</strong>，总时间复杂度就是O(Cx100x100)，C是八个点的网络流的复杂度，应该不会很大。如下图删去这两条边：</p>
+<p><img src="/img/duoxiao/erfentu.jpg" alt="erfentu"></p>
+<p>代码：（用了hjt的网络流板子）</p>
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include&lt;iostream&gt;
+#include&lt;cstring&gt;
+#include&lt;cstdio&gt;
+#include&lt;algorithm&gt;
+#include&lt;vector&gt;
+#include&lt;queue&gt;
+using namespace std;
+
+int cansel_sync=(ios::sync_with_stdio(0),cin.tie(0),0);
+template&lt;class T&gt;inline void read(T &amp;x){x=0;char o,f=1;while(o=getchar(),o&lt;48)if(o==45)f=-f;do x=(x&lt;&lt;3)+(x&lt;&lt;1)+(o^48);while(o=getchar(),o&gt;47);x*=f;}
+#define ll long long
+#define rep(i,a,b) for(int i=(a);i&lt;=(b);i++)
+#define repb(i,a,b) for(int i=(a);i&gt;=(b);i--)
+#define INF 0x3f3f3f3f
+const int N = 114;
+struct FLOW{
+	struct edge{int to,w,nxt;};
+	vector&lt;edge&gt; a; int head[N],cur[N];
+	int n,s,t;
+	queue&lt;int&gt; q; bool inque[N];
+	int dep[N];
+	void ae(int x,int y,int w){ // add edge
+		a.push_back({y,w,head[x]});
+		head[x]=a.size()-1;
+	}
+	bool bfs(){ // get dep[]
+		fill(dep,dep+n,INF); dep[s]=0;
+		copy(head,head+n,cur);
+		q=queue&lt;int&gt;(); q.push(s);
+		while(!q.empty()){
+			int x=q.front(); q.pop(); inque[x]=0;
+			for(int i=head[x];i!=-1;i=a[i].nxt){
+				int p=a[i].to;
+				if(dep[p]&gt;dep[x]+1 &amp;&amp; a[i].w){
+					dep[p]=dep[x]+1;
+					if(inque[p]==0){
+						inque[p]=1;
+						q.push(p);
+					}
+				}
+			}
+		}
+		return dep[t]!=INF;
+	}
+	int dfs(int x,int flow){ // extend
+		int now,ans=0;
+		if(x==t)return flow;
+		for(int &amp;i=cur[x];i!=-1;i=a[i].nxt){
+			int p=a[i].to;
+			if(a[i].w &amp;&amp; dep[p]==dep[x]+1)
+			if((now=dfs(p,min(flow,a[i].w)))){
+				a[i].w-=now;
+				a[i^1].w+=now;
+				ans+=now,flow-=now;
+				if(flow==0)break;
+			}
+		}
+		return ans;
+	}
+	void init(int _n){
+		n=_n+1; a.clear();
+		fill(head,head+n,-1);
+		fill(inque,inque+n,0);
+	}
+	int solve(int _s,int _t){ // return max flow
+		s=_s,t=_t;
+		int ans=0;
+		while(bfs())ans+=dfs(s,INF);
+		return ans;
+	}
+}flow;
+void add_edge(int x,int y,int w){flow.ae(x,y,w),flow.ae(y,x,0);}
+
+inline int mo(int x){return (x+4-1)%4+1;}
+int cnt[10][6];
+int c[10][6];
+int l[10],r[10],al[10],ar[10];
+
+void solve(){
+    rep(i,1,4)
+        rep(j,1,4) cin&gt;&gt;c[i][j];
+    rep(i,1,4){
+        cnt[i][1] = c[i][mo(i+1)];//左走
+        cnt[i][2] = c[i][mo(i+2)];//前走
+        cnt[i][3] = c[i][mo(i-1)];//右走
+    }
+    int res = 0;
+    rep(i,1,4) res = max(res,cnt[i][3]);
+    l[1] = cnt[1][1],l[2] = cnt[2][1];
+    l[3] = cnt[3][2],l[4] = cnt[4][2];
+    r[1] = cnt[1][2],r[2] = cnt[2][2];
+    r[3] = cnt[3][1],r[4] = cnt[4][1];
+
+    int s=99,t=100;
+    int fres = INF;
+    int eg1 = min(l[1],l[4]),eg2 = min(r[2],r[3]);
+    int tot = 0;//总点权
+    rep(i,1,4) ar[i]=r[i],al[i]=l[i],tot+=r[i]+l[i];
+    //cout&lt;&lt;"tot"&lt;&lt;tot&lt;&lt;endl;
+    rep(i,0,eg1){
+        al[1]=l[1]-i;
+        al[4]=l[4]-i;
+        rep(j,0,eg2){
+            flow.init(101);//s=1,t=100;
+            ar[2]=r[2]-j;
+            ar[3]=r[3]-j;
+            rep(i,1,4){
+                add_edge(s,i,al[i]);//s to l
+                add_edge(4+i,t,ar[i]);//r to t
+
+                add_edge(i,4+i,INF);//同侧
+                add_edge(i,4+mo(i+2),INF);//对面
+            }
+            add_edge(2,5,INF);
+            add_edge(3,8,INF);
+
+            int tmp;
+            fres = min(fres,tot-flow.solve(s,t)-i-j);
+        }
+    }
+    cout&lt;&lt;max(res,fres)&lt;&lt;endl;
+}
+
+int main(){
+    int z;
+    cin&gt;&gt;z;
+    while(z--) solve();
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
                 
@@ -1202,7 +1344,7 @@ int main(){
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">57.3k</span>
+                        class="white-color">58.3k</span>
             
             
             
